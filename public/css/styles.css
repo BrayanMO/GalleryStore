@@ -1338,16 +1338,17 @@ ul, ol {
 .whatsapp-preview-box {
   background: var(--bg-surface-muted);
   border-radius: var(--radius-md);
-  padding: 1rem;
-  font-size: 0.8rem;
-  font-family: monospace;
+  padding: 1.25rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
   white-space: pre-wrap;
   text-align: left;
-  max-height: 150px;
+  max-height: 180px;
   overflow-y: auto;
   width: 100%;
   max-width: 440px;
   border: 1px solid var(--border-light);
+  color: var(--text-primary);
 }
 
 /* ==========================================================================

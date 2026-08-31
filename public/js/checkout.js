@@ -101,24 +101,51 @@ function setupCheckoutForm() {
 }
 
 function generarMensajeWhatsApp(pedido) {
-  let mensaje = `Hola! Quiero hacer este pedido:\n\n`;
+  const brandName = (storeConfig.storeName || 'GALLERY').replace(/\|.*/, '').trim().toUpperCase();
+  const orderId = `GL-${Math.floor(1000 + Math.random() * 9000)}`;
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('es-PE', { day: '2-digit', month: 'short' });
 
+  let msg = `🛍️ *PEDIDO — ${brandName}*\n`;
+  msg += `_Orden #${orderId} · ${dateStr}_\n`;
+  msg += `────────────────────────\n\n`;
+
+  msg += `📋 *PRENDAS SOLICITADAS:*\n`;
   pedido.items.forEach(item => {
-    mensaje += `- ${item.cantidad}x ${item.nombre} (Talla ${item.talla}, ${item.color}) - ${formatPrice(item.precioUnitario * item.cantidad)}\n`;
+    const subtotal = formatPrice(item.precioUnitario * item.cantidad);
+    msg += `• *${item.cantidad}x ${item.nombre}*\n`;
+    msg += `   └ Talla: ${item.talla} | Color: ${item.color}\n`;
+    msg += `   └ Subtotal: ${subtotal}\n\n`;
   });
 
-  mensaje += `\nTotal: ${formatPrice(pedido.total)}\n\n`;
-  mensaje += `Nombre: ${pedido.cliente.nombre}\n`;
-  mensaje += `Teléfono: ${pedido.cliente.telefono}\n`;
-  mensaje += `Dirección: ${pedido.cliente.direccion}\n`;
-  mensaje += `Notas: ${pedido.cliente.notas}`;
+  msg += `────────────────────────\n`;
+  msg += `💳 *TOTAL A PAGAR:* *${formatPrice(pedido.total)}*\n`;
+  msg += `────────────────────────\n\n`;
 
-  return mensaje;
+  msg += `📍 *DATOS DE ENTREGA:*\n`;
+  msg += `👤 *Cliente:* ${pedido.cliente.nombre}\n`;
+  msg += `📱 *WhatsApp:* ${pedido.cliente.telefono}\n`;
+  msg += `🏠 *Dirección:* ${pedido.cliente.direccion}\n`;
+  if (pedido.cliente.notas && pedido.cliente.notas !== 'Ninguna' && pedido.cliente.notas.trim() !== '') {
+    msg += `📝 *Referencia / Notas:* ${pedido.cliente.notas}\n`;
+  }
+
+  msg += `\n────────────────────────\n`;
+  msg += `_Hola! Quiero coordinar el pago y envío de mi pedido._`;
+
+  return msg;
 }
 
 function procesarPedidoWhatsApp(pedido) {
   const mensajeTexto = generarMensajeWhatsApp(pedido);
-  const whatsappUrl = `https://wa.me/${storeConfig.whatsappNumber}?text=${encodeURIComponent(mensajeTexto)}`;
+  
+  // Limpiar y formatear número de WhatsApp
+  let phone = (storeConfig.whatsappNumber || '').replace(/\D/g, '');
+  if (phone.length === 9 && !phone.startsWith('51')) {
+    phone = '51' + phone; // Prefijo Perú por defecto para 9 dígitos
+  }
+
+  const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(mensajeTexto)}`;
 
   // Mostrar modal de confirmación
   const confirmBackdrop = document.getElementById('confirm-modal-backdrop');
