@@ -1,5 +1,5 @@
 /**
- * Archivo principal de inicialización de la aplicación
+ * Archivo principal de inicialización de la aplicación - GALLERY STORE
  */
 import { fetchSettings, fetchConfig } from './api.js';
 import { setStoreConfig, openCartDrawer, closeCartDrawer, renderCartDrawer, updateCartBadge, switchView, closeProductModal } from './ui.js';
@@ -7,39 +7,44 @@ import { initCatalog, loadFeaturedProducts, setCatalogCategory } from './catalog
 import { initCheckout, renderCheckoutSummary, setCheckoutConfig } from './checkout.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // 1. Cargar configuración completa y ajustes visuales desde el backend
-  const settings = await fetchSettings();
-  const config = settings || await fetchConfig();
-  
-  setStoreConfig(config);
-  setCheckoutConfig(config);
-
-  // Aplicar ajustes visuales dinámicos al Home
-  applyDynamicSettings(settings);
-
-  // 2. Inicializar catálogo y productos destacados
-  await initCatalog();
-  await loadFeaturedProducts();
-
-  // 3. Inicializar checkout
-  initCheckout();
-
-  // 4. Inicializar estado del carrito
+  // 1. Restaurar INMEDIATAMENTE el estado del carrito desde localStorage (0ms delay)
   updateCartBadge();
   renderCartDrawer();
+  initCheckout();
 
-  // 5. Escuchar evento global de actualización de carrito
+  // 2. Configurar listeners de navegación y modales de inmediato
+  setupNavigation();
+  setupModalsAndDrawers();
+
+  // 3. Escuchar evento global de actualización de carrito
   window.addEventListener('cart:updated', () => {
     updateCartBadge();
     renderCartDrawer();
     renderCheckoutSummary();
   });
 
-  // 6. Configurar navegación
-  setupNavigation();
+  // 4. Cargar configuración completa y ajustes visuales desde el backend
+  try {
+    const settings = await fetchSettings();
+    const config = settings || await fetchConfig();
+    
+    if (config) {
+      setStoreConfig(config);
+      setCheckoutConfig(config);
+      applyDynamicSettings(settings);
 
-  // 7. Configurar Drawer y Modales
-  setupModalsAndDrawers();
+      // Re-renderizar con los símbolos y moneda definitivos
+      updateCartBadge();
+      renderCartDrawer();
+      renderCheckoutSummary();
+    }
+  } catch (err) {
+    console.error('Error al cargar configuración:', err);
+  }
+
+  // 5. Inicializar catálogo y productos destacados
+  await initCatalog();
+  await loadFeaturedProducts();
 });
 
 function applyDynamicSettings(settings) {
