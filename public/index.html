@@ -329,6 +329,38 @@
   </div>
 
   <!-- ==========================================================================
+       LIGHTBOX / ZOOM FULLSCREEN (IMÁGENES AMPLIADAS)
+       ========================================================================== -->
+  <div class="lightbox-backdrop" id="lightbox-backdrop" role="dialog" aria-modal="true">
+    <div class="lightbox-content">
+      <button type="button" class="lightbox-close-btn" id="lightbox-close-btn" aria-label="Cerrar ampliación">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="lightbox-image-wrap">
+        <img id="lightbox-main-img" src="" alt="Vista ampliada" />
+      </div>
+
+      <div class="lightbox-footer">
+        <button type="button" class="lightbox-arrow-btn" id="lightbox-prev-btn" aria-label="Foto anterior">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <span class="lightbox-counter" id="lightbox-counter">1 / 1</span>
+        <button type="button" class="lightbox-arrow-btn" id="lightbox-next-btn" aria-label="Foto siguiente">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
        MODAL DE CONFIRMACIÓN & REDIRECCIÓN A WHATSAPP
        ========================================================================== -->
   <div class="modal-backdrop" id="confirm-modal-backdrop" role="dialog" aria-modal="true">

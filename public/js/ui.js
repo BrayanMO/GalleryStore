@@ -153,11 +153,13 @@ export function updateCartBadge() {
   badge.classList.add('bounce');
 }
 
-// Modal de Detalle de Producto
+// Modal de Detalle de Producto con Galería y Zoom
 export function openProductModal(product) {
   const modalBackdrop = document.getElementById('product-modal-backdrop');
   if (!modalBackdrop) return;
 
+  const images = product.imagenes && product.imagenes.length ? product.imagenes : ['https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1000&q=80'];
+  let currentImgIndex = 0;
   let selectedSize = product.tallas && product.tallas.length ? product.tallas[0] : 'Única';
   let selectedColor = product.colores && product.colores.length ? product.colores[0] : 'Único';
   let quantity = 1;
@@ -172,9 +174,42 @@ export function openProductModal(product) {
       </button>
 
       <div class="modal-product-grid">
-        <div class="modal-product-media">
-          <img id="modal-main-img" src="${product.imagenes[0]}" alt="${product.nombre}" />
+        <!-- Galería Interactiva con Miniaturas y Zoom -->
+        <div class="modal-gallery-container">
+          <div class="modal-product-media" id="modal-img-trigger">
+            <img id="modal-main-img" src="${images[0]}" alt="${product.nombre}" />
+            
+            <button type="button" class="zoom-badge-btn" id="btn-zoom-trigger">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                <line x1="11" y1="8" x2="11" y2="14"></line>
+                <line x1="8" y1="11" x2="14" y2="11"></line>
+              </svg>
+              <span>Toca para ampliar</span>
+            </button>
+
+            ${images.length > 1 ? `
+              <button type="button" class="gallery-nav-arrow arrow-prev" id="gallery-prev-btn" aria-label="Anterior">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </button>
+              <button type="button" class="gallery-nav-arrow arrow-next" id="gallery-next-btn" aria-label="Siguiente">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            ` : ''}
+          </div>
+
+          ${images.length > 1 ? `
+            <div class="modal-thumbnails-strip" id="modal-thumbnails-strip">
+              ${images.map((img, idx) => `
+                <button type="button" class="thumb-pill-btn ${idx === 0 ? 'active' : ''}" data-index="${idx}" aria-label="Ver foto ${idx + 1}">
+                  <img src="${img}" alt="${product.nombre} foto ${idx + 1}" loading="lazy" />
+                </button>
+              `).join('')}
+            </div>
+          ` : ''}
         </div>
+
         <div class="modal-product-info">
           <div class="product-card-cat">${product.categoria}</div>
           <h2 class="modal-product-title">${product.nombre}</h2>
@@ -208,8 +243,8 @@ export function openProductModal(product) {
           </div>
 
           <!-- Cantidad y Añadir -->
-          <div style="display: flex; gap: 1rem; align-items: center; margin-top: 0.5rem;">
-            <div class="qty-stepper">
+          <div style="display: flex; gap: 0.75rem; align-items: center; margin-top: 0.5rem; width: 100%;">
+            <div class="qty-stepper" style="flex-shrink: 0;">
               <button type="button" class="qty-btn" id="modal-qty-minus">-</button>
               <span class="qty-val" id="modal-qty-val">1</span>
               <button type="button" class="qty-btn" id="modal-qty-plus">+</button>
@@ -231,9 +266,58 @@ export function openProductModal(product) {
   modalBackdrop.classList.add('active');
   document.body.style.overflow = 'hidden';
 
-  // Event Listeners dentro del Modal
+  // Función para cambiar de imagen en la galería
+  function switchImage(index) {
+    if (index < 0) index = images.length - 1;
+    if (index >= images.length) index = 0;
+    currentImgIndex = index;
+
+    const mainImg = document.getElementById('modal-main-img');
+    if (mainImg) mainImg.src = images[currentImgIndex];
+
+    const thumbBtns = modalBackdrop.querySelectorAll('.thumb-pill-btn');
+    thumbBtns.forEach((btn, i) => {
+      btn.classList.toggle('active', i === currentImgIndex);
+    });
+  }
+
+  // Eventos de Miniaturas
+  modalBackdrop.querySelectorAll('.thumb-pill-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      switchImage(parseInt(btn.dataset.index, 10));
+    });
+  });
+
+  // Flechas en modal
+  const prevBtn = document.getElementById('gallery-prev-btn');
+  const nextBtn = document.getElementById('gallery-next-btn');
+  if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      switchImage(currentImgIndex - 1);
+    });
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      switchImage(currentImgIndex + 1);
+    });
+  }
+
+  // Abrir Zoom / Lightbox al tocar la foto o el botón de zoom
+  const mediaTrigger = document.getElementById('modal-img-trigger');
+  if (mediaTrigger) {
+    mediaTrigger.addEventListener('click', (e) => {
+      if (!e.target.closest('.gallery-nav-arrow')) {
+        openLightbox(images, currentImgIndex);
+      }
+    });
+  }
+
+  // Cerrar Modal
   const closeBtn = document.getElementById('modal-close-btn');
-  closeBtn.addEventListener('click', closeProductModal);
+  if (closeBtn) closeBtn.addEventListener('click', closeProductModal);
 
   // Tallas
   const sizeBtns = modalBackdrop.querySelectorAll('.size-pill');
@@ -267,7 +351,7 @@ export function openProductModal(product) {
   });
 
   document.getElementById('modal-qty-plus').addEventListener('click', () => {
-    if (quantity < product.stock) {
+    if (quantity < (product.stock || 99)) {
       quantity++;
       qtyVal.textContent = quantity;
     } else {
@@ -290,6 +374,91 @@ export function closeProductModal() {
     modalBackdrop.classList.remove('active');
     document.body.style.overflow = '';
   }
+}
+
+/* ==========================================================================
+   LIGHTBOX FULL-SCREEN ZOOM VIEWER
+   ========================================================================== */
+let lightboxImages = [];
+let lightboxCurrentIndex = 0;
+
+export function openLightbox(imagesList, startIndex = 0) {
+  const lightbox = document.getElementById('lightbox-backdrop');
+  if (!lightbox || !imagesList || imagesList.length === 0) return;
+
+  lightboxImages = imagesList;
+  lightboxCurrentIndex = startIndex >= 0 && startIndex < imagesList.length ? startIndex : 0;
+
+  renderLightboxImage();
+  lightbox.classList.add('active');
+
+  // Listeners de Lightbox
+  const closeBtn = document.getElementById('lightbox-close-btn');
+  const prevBtn = document.getElementById('lightbox-prev-btn');
+  const nextBtn = document.getElementById('lightbox-next-btn');
+
+  if (closeBtn) closeBtn.onclick = closeLightbox;
+  if (prevBtn) {
+    prevBtn.onclick = (e) => {
+      e.stopPropagation();
+      navigateLightbox(-1);
+    };
+  }
+  if (nextBtn) {
+    nextBtn.onclick = (e) => {
+      e.stopPropagation();
+      navigateLightbox(1);
+    };
+  }
+
+  lightbox.onclick = (e) => {
+    if (e.target === lightbox || e.target.classList.contains('lightbox-image-wrap')) {
+      closeLightbox();
+    }
+  };
+
+  window.addEventListener('keydown', handleLightboxKeydown);
+}
+
+function renderLightboxImage() {
+  const imgEl = document.getElementById('lightbox-main-img');
+  const counterEl = document.getElementById('lightbox-counter');
+  const prevBtn = document.getElementById('lightbox-prev-btn');
+  const nextBtn = document.getElementById('lightbox-next-btn');
+
+  if (imgEl && lightboxImages[lightboxCurrentIndex]) {
+    imgEl.src = lightboxImages[lightboxCurrentIndex];
+  }
+
+  if (counterEl) {
+    counterEl.textContent = `${lightboxCurrentIndex + 1} / ${lightboxImages.length}`;
+  }
+
+  // Ocultar flechas si solo hay una imagen
+  if (prevBtn) prevBtn.style.display = lightboxImages.length > 1 ? 'flex' : 'none';
+  if (nextBtn) nextBtn.style.display = lightboxImages.length > 1 ? 'flex' : 'none';
+}
+
+function navigateLightbox(direction) {
+  if (!lightboxImages.length) return;
+  lightboxCurrentIndex += direction;
+  if (lightboxCurrentIndex < 0) lightboxCurrentIndex = lightboxImages.length - 1;
+  if (lightboxCurrentIndex >= lightboxImages.length) lightboxCurrentIndex = 0;
+  renderLightboxImage();
+}
+
+function handleLightboxKeydown(e) {
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') navigateLightbox(-1);
+  if (e.key === 'ArrowRight') navigateLightbox(1);
+}
+
+export function closeLightbox() {
+  const lightbox = document.getElementById('lightbox-backdrop');
+  if (lightbox) {
+    lightbox.classList.remove('active');
+  }
+  window.removeEventListener('keydown', handleLightboxKeydown);
 }
 
 // Navegación de vistas (Home, Catálogo, Checkout)
