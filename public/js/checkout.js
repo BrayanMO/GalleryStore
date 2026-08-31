@@ -105,10 +105,13 @@ function generarMensajeWhatsApp(pedido) {
   const orderId = `GL-${Math.floor(1000 + Math.random() * 9000)}`;
   const now = new Date();
   const dateStr = now.toLocaleDateString('es-PE', { day: '2-digit', month: 'short' });
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const timeStr = `${hours}:${minutes}`;
 
   let msg = `🛍️ *PEDIDO — ${brandName}*\n`;
-  msg += `_Orden #${orderId} · ${dateStr}_\n`;
-  msg += `────────────────────────\n\n`;
+  msg += `_Orden #${orderId} · ${dateStr} · ${timeStr}_\n`;
+  msg += `──────────────\n\n`;
 
   msg += `📋 *PRENDAS SOLICITADAS:*\n`;
   pedido.items.forEach(item => {
@@ -118,9 +121,9 @@ function generarMensajeWhatsApp(pedido) {
     msg += `   └ Subtotal: ${subtotal}\n\n`;
   });
 
-  msg += `────────────────────────\n`;
+  msg += `──────────────\n`;
   msg += `💳 *TOTAL A PAGAR:* *${formatPrice(pedido.total)}*\n`;
-  msg += `────────────────────────\n\n`;
+  msg += `──────────────\n\n`;
 
   msg += `📍 *DATOS DE ENTREGA:*\n`;
   msg += `👤 *Cliente:* ${pedido.cliente.nombre}\n`;
@@ -130,7 +133,7 @@ function generarMensajeWhatsApp(pedido) {
     msg += `📝 *Referencia / Notas:* ${pedido.cliente.notas}\n`;
   }
 
-  msg += `\n────────────────────────\n`;
+  msg += `\n─────────────\n`;
   msg += `_Hola! Quiero coordinar el pago y envío de mi pedido._`;
 
   return msg;
@@ -138,7 +141,7 @@ function generarMensajeWhatsApp(pedido) {
 
 function procesarPedidoWhatsApp(pedido) {
   const mensajeTexto = generarMensajeWhatsApp(pedido);
-  
+
   // Limpiar y formatear número de WhatsApp
   let phone = (storeConfig.whatsappNumber || '').replace(/\D/g, '');
   if (phone.length === 9 && !phone.startsWith('51')) {
