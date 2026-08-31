@@ -1,0 +1,25 @@
+{
+  "name": "tienda-de-ropa",
+  "version": "1.0.0",
+  "description": "Tienda de ropa online minimalista con carrito local e integración a WhatsApp",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "ecommerce",
+    "clothing-store",
+    "whatsapp-checkout",
+    "minimalist"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "multer": "^2.3.0",
+    "pg": "^8.23.0"
+  }
+}

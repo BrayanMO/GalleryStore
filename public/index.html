@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NOAL | Studio & Apparel - Tienda de Ropa Online</title>
+  <meta name="description" content="Tienda de ropa de diseño contemporáneo, siluetas minimalistas y compra ágil con atención directa por WhatsApp." />
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Estilos principales -->
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+
+  <!-- ==========================================================================
+       BANNER DE ANUNCIOS / PROMOCIONES (ADMINISTRABLE)
+       ========================================================================== -->
+  <div class="announcement-banner" id="announcement-banner" style="display: none;">
+    <div class="container">
+      <span id="announcement-banner-text">🔥 30% DE DSCTO EN TODA LA TIENDA | ENVÍOS A TODO EL PAÍS</span>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       HEADER & NAVEGACIÓN
+       ========================================================================== -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <!-- Logo / Marca -->
+      <a href="#" class="brand-logo" data-nav="home" id="brand-logo-btn">
+        <span class="store-brand-name">NOAL</span><span class="accent">.</span>
+      </a>
+
+      <!-- Enlaces de navegación -->
+      <nav class="nav-links">
+        <a href="#" class="nav-link active" data-nav="home" data-view="home">Inicio</a>
+        <a href="#" class="nav-link" data-nav="catalog" data-view="catalog">Catálogo</a>
+        <a href="#" class="nav-link" data-nav="checkout" data-view="checkout">Checkout</a>
+      </nav>
+
+      <!-- Acciones de cabecera -->
+      <div class="header-actions">
+        <button type="button" class="cart-toggle-btn" id="cart-toggle-btn" aria-label="Abrir carrito de compras">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span class="cart-badge" id="cart-badge" style="display: none;">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       VISTA 1: HOME (PORTADA ADMINISTRABLE)
+       ========================================================================== -->
+  <main id="view-home" class="view-section">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-content">
+            <span class="hero-tag">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              <span id="hero-tag-text">Nueva Temporada 2026</span>
+            </span>
+            <h1 class="hero-title" id="hero-title-text">Esenciales de corte contemporáneo.</h1>
+            <p class="hero-description" id="hero-desc-text">
+              Prendas confeccionadas con materias primas seleccionadas, cortes estructurados y una estética limpia creada para durar.
+            </p>
+            <div class="hero-actions">
+              <button type="button" class="btn btn-primary btn-lg" id="hero-cta-btn">
+                <span id="hero-cta-label">Ver Catálogo Completo</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </button>
+              <button type="button" class="btn btn-secondary btn-lg" data-category-card="Hombre">
+                Colección Hombre
+              </button>
+            </div>
+          </div>
+
+          <div class="hero-media">
+            <div class="hero-image-wrapper">
+              <img id="hero-image-img" src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=80" alt="Colección NOAL Apparel" />
+              <div class="hero-badge-overlay">
+                <div class="hero-badge-title" id="hero-badge-title-text">Calidad Garantizada</div>
+                <div class="hero-badge-text" id="hero-badge-desc-text">100% Algodón Premium</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Categorías Principales (Administrables) -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Explora por Categorías</h2>
+            <p class="section-subtitle">Encuentra prendas diseñadas para cada ocasión y estilo.</p>
+          </div>
+        </div>
+
+        <div class="categories-grid" id="categories-home-grid">
+          <!-- Renderizado dinámico desde settings.json / site_settings -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Destacados / Tendencias -->
+    <section class="section" style="background: var(--bg-surface); border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light);">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title" id="featured-section-title">Prendas en Tendencia</h2>
+            <p class="section-subtitle" id="featured-section-subtitle">Los favoritos de nuestra comunidad esta semana.</p>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm" data-nav="catalog">
+            Ver todas
+          </button>
+        </div>
+
+        <div class="products-grid" id="featured-products-grid">
+          <!-- Renderizado dinámico de productos destacados -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       VISTA 2: CATÁLOGO
+       ========================================================================== -->
+  <main id="view-catalog" class="view-section" style="display: none;">
+    <section class="section">
+      <div class="container">
+        <div class="section-header" style="margin-bottom: 1.5rem;">
+          <div>
+            <h1 class="section-title">Catálogo Completo</h1>
+            <p class="section-subtitle">Filtra por categoría, talla o busca tu prenda ideal.</p>
+          </div>
+        </div>
+
+        <!-- Toolbar de Filtros -->
+        <div class="catalog-toolbar">
+          <div class="filter-pills" id="catalog-category-pills">
+            <!-- Categorías dinámicas -->
+          </div>
+
+          <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+            <!-- Filtro de Tallas -->
+            <select id="catalog-size-filter" class="filter-btn" style="cursor: pointer; outline: none;">
+              <option value="">Todas las Tallas</option>
+              <option value="XS">Talla XS</option>
+              <option value="S">Talla S</option>
+              <option value="M">Talla M</option>
+              <option value="L">Talla L</option>
+              <option value="XL">Talla XL</option>
+              <option value="38">Talla 38</option>
+              <option value="40">Talla 40</option>
+              <option value="42">Talla 42</option>
+              <option value="Única">Talla Única</option>
+            </select>
+
+            <!-- Buscador -->
+            <div class="catalog-search-wrap">
+              <svg class="search-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="catalog-search-input" class="catalog-search-input" placeholder="Buscar por nombre o prenda..." />
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid de Productos -->
+        <div class="products-grid" id="catalog-products-grid">
+          <!-- Renderizado dinámico de productos -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       VISTA 3: CHECKOUT
+       ========================================================================== -->
+  <main id="view-checkout" class="view-section" style="display: none;">
+    <section class="checkout-section">
+      <div class="container">
+        <div class="section-header">
+          <div>
+            <h1 class="section-title">Finalizar Pedido</h1>
+            <p class="section-subtitle">Completa tus datos para coordinar el envío directamente por WhatsApp.</p>
+          </div>
+        </div>
+
+        <div class="checkout-grid">
+          <!-- Formulario de Datos del Cliente -->
+          <div class="checkout-card">
+            <h2 class="checkout-card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              Datos para la Entrega
+            </h2>
+
+            <form id="checkout-form">
+              <div class="form-group">
+                <label class="form-label" for="input-nombre">
+                  Nombre y Apellido <span class="req">*</span>
+                </label>
+                <input type="text" id="input-nombre" name="nombre" class="form-input" placeholder="Ej: Brayan Silva" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="input-telefono">
+                  Teléfono / WhatsApp <span class="req">*</span>
+                </label>
+                <input type="tel" id="input-telefono" name="telefono" class="form-input" placeholder="Ej: 988 182 681" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="input-direccion">
+                  Dirección de Entrega (o Punto de Retiro) <span class="req">*</span>
+                </label>
+                <input type="text" id="input-direccion" name="direccion" class="form-input" placeholder="Ej: Av. Larco 456, Miraflores" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="input-notas">
+                  Notas Adicionales (Opcional)
+                </label>
+                <textarea id="input-notas" name="notas" class="form-textarea" placeholder="Piso, departamento, referencias o detalles de entrega"></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-lg btn-full" id="checkout-submit-btn" style="margin-top: 1rem;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                </svg>
+                Confirmar y Enviar a WhatsApp
+              </button>
+            </form>
+          </div>
+
+          <!-- Resumen del Pedido -->
+          <div class="checkout-card" style="height: fit-content;">
+            <h2 class="checkout-card-title">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <path d="M16 10a4 4 0 0 1-8 0"></path>
+              </svg>
+              Resumen del Pedido
+            </h2>
+
+            <div id="checkout-items-summary">
+              <!-- Resumen dinámico -->
+            </div>
+
+            <div class="order-summary-total">
+              <span>Total a pagar:</span>
+              <span class="total-val" id="checkout-total-val">S/ 0</span>
+            </div>
+
+            <div style="margin-top: 1.25rem; font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">
+              🔒 <strong>Sin comisiones ni cargos ocultos:</strong> El pago (transferencia, Yape, Plin o efectivo) y el envío se coordinan directamente por WhatsApp con nuestro equipo.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       DRAWER DEL CARRITO LATERAL
+       ========================================================================== -->
+  <div class="drawer-backdrop" id="drawer-backdrop">
+    <aside class="cart-drawer" role="dialog" aria-modal="true" aria-label="Carrito de compras">
+      <div class="drawer-header">
+        <div>
+          <h2 class="drawer-title">Tu Carrito</h2>
+          <span style="font-size: 0.8rem; color: var(--text-secondary);" id="drawer-cart-count">0 prendas</span>
+        </div>
+        <button type="button" class="drawer-close-btn" id="drawer-close-btn" aria-label="Cerrar carrito">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="drawer-items" id="drawer-items-list">
+        <!-- Ítems del carrito renderizados dinámicamente -->
+      </div>
+
+      <div class="drawer-footer">
+        <div class="drawer-subtotal-row">
+          <span class="drawer-subtotal-label">Subtotal estimado:</span>
+          <span class="drawer-subtotal-val" id="drawer-subtotal-val">S/ 0</span>
+        </div>
+        <p class="drawer-shipping-note">El costo de envío y medios de pago se acuerdan por WhatsApp</p>
+        <button type="button" class="btn btn-primary btn-lg btn-full" id="drawer-checkout-btn">
+          Continuar al Checkout
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ==========================================================================
+       MODAL DETALLE DE PRODUCTO
+       ========================================================================== -->
+  <div class="modal-backdrop" id="product-modal-backdrop" role="dialog" aria-modal="true">
+    <!-- Renderizado dinámico desde ui.js -->
+  </div>
+
+  <!-- ==========================================================================
+       MODAL DE CONFIRMACIÓN & REDIRECCIÓN A WHATSAPP
+       ========================================================================== -->
+  <div class="modal-backdrop" id="confirm-modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal-card" style="max-width: 520px;">
+      <div class="confirm-modal-content">
+        <div class="success-icon-wrap">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+
+        <h2 class="confirm-title">¡Pedido Preparado con Éxito!</h2>
+        <p class="confirm-text">
+          Te estamos redirigiendo a WhatsApp para enviar los datos de tu compra y coordinar la entrega con un asesor.
+        </p>
+
+        <!-- Barra de progreso -->
+        <div class="redirect-progress-bar">
+          <div class="redirect-progress-fill" id="redirect-progress-fill"></div>
+        </div>
+
+        <!-- Vista previa del mensaje generado -->
+        <div class="whatsapp-preview-box" id="whatsapp-msg-preview"></div>
+
+        <div style="display: flex; gap: 0.75rem; width: 100%; margin-top: 0.5rem; flex-wrap: wrap;">
+          <a href="#" target="_blank" class="btn btn-primary btn-full" id="btn-manual-whatsapp">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+            </svg>
+            Abrir WhatsApp Ahora
+          </a>
+          <button type="button" class="btn btn-secondary btn-full" id="confirm-modal-close-btn">
+            Volver a la Tienda
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="brand-logo">
+            <span class="store-brand-name">NOAL</span><span class="accent">.</span>
+          </div>
+          <p>Indumentaria y básicos contemporáneos confeccionados con materiales de alta calidad y diseño atemporal.</p>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Navegación</h4>
+          <div class="footer-links">
+            <a href="#" class="footer-link" data-nav="home">Inicio</a>
+            <a href="#" class="footer-link" data-nav="catalog">Catálogo de Productos</a>
+            <a href="#" class="footer-link" data-nav="checkout">Finalizar Compra</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Atención Personalizada</h4>
+          <div class="footer-links">
+            <span class="footer-link">Envíos a todo el país</span>
+            <span class="footer-link">Pagos por Transferencia, Yape o Plin</span>
+            <span class="footer-link">Atención directa por WhatsApp</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 <span class="store-brand-name">NOAL</span>. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts con ES Modules -->
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

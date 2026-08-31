@@ -1,0 +1,192 @@
+[
+  {
+    "id": "prod-1",
+    "nombre": "Remera Oversize Heavyweight",
+    "precio": 79.00,
+    "categoria": "Hombre",
+    "tallas": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "colores": [
+      "Negro",
+      "Blanco Crudo",
+      "Gris Topo",
+      "Verde Bosque"
+    ],
+    "imagenes": [
+      "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=1000&q=80"
+    ],
+    "descripcion": "Remera de corte oversize confeccionada en algodón peinado 24/1 de 240 GSM. Caída estructurada, cuello reforzado de ribb ancho y costuras dobles.",
+    "stock": 18,
+    "destacado": true,
+    "tag": "Más Vendido"
+  },
+  {
+    "id": "prod-2",
+    "nombre": "Buzo Hoodie Minimal Boxy",
+    "precio": 139.00,
+    "categoria": "Hombre",
+    "tallas": [
+      "M",
+      "L",
+      "XL"
+    ],
+    "colores": [
+      "Negro Fumé",
+      "Crema",
+      "Marrón Cacao"
+    ],
+    "imagenes": [
+      "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=1000&q=80"
+    ],
+    "descripcion": "Hoodie silueta boxy fit con hombros caídos en rústico premium invisible. Interior suave, capucha forrada doble y bolsillo canguro estilizado.",
+    "stock": 12,
+    "destacado": true,
+    "tag": "Tendencia"
+  },
+  {
+    "id": "prod-3",
+    "nombre": "Pantalón Carpenter Denim Relaxed",
+    "precio": 149.00,
+    "categoria": "Hombre",
+    "tallas": [
+      "38",
+      "40",
+      "42",
+      "44"
+    ],
+    "colores": [
+      "Denim Lavado",
+      "Negro Washed"
+    ],
+    "imagenes": [
+      "https://images.unsplash.com/photo-1542272604-780c96856592?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=1000&q=80"
+    ],
+    "descripcion": "Pantalón estilo carpintero en denim rígido 100% algodón de 13.5 oz. Tiro medio-alto con calce recto amplio y detalle de presilla utilitaria.",
+    "stock": 15,
+    "destacado": false,
+    "tag": "Esencial"
+  },
+  {
+    "id": "prod-4",
+    "nombre": "Blazer Sastrero Oversized",
+    "precio": 189.00,
+    "categoria": "Mujer",
+    "tallas": [
+      "S",
+      "M",
+      "L"
+    ],
+    "colores": [
+      "Gris Jaspeado",
+      "Negro Profundo",
+      "Arena"
+    ],
+    "imagenes": [
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&fit=crop&w=1000&q=80"
+    ],
+    "descripcion": "Blazer sastrero con corte relajado, hombreras sutiles estructuradas y solapa en punta. Forrería completa de satén al tono.",
+    "stock": 8,
+    "destacado": true,
+    "tag": "Nuevo"
+  },
+  {
+    "id": "prod-5",
+    "nombre": "Top Ribb Cuello Halter",
+    "precio": 55.00,
+    "categoria": "Mujer",
+    "tallas": [
+      "XS",
+      "S",
+      "M"
+    ],
+    "colores": [
+      "Blanco",
+      "Negro",
+      "Terracota"
+    ],
+    "imagenes": [
+      "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=1000&q=80"
+    ],
+    "descripcion": "Top sin mangas confeccionado en ribb elástizado de tacto suave. Espalda descubierta sutil y ajuste anatómico de alta comodidad.",
+    "stock": 25,
+    "destacado": false,
+    "tag": "Básico"
+  },
+  {
+    "id": "prod-6",
+    "nombre": "Pantalón Wide Leg Lino Blend",
+    "precio": 129.00,
+    "categoria": "Mujer",
+    "tallas": [
+      "36",
+      "38",
+      "40",
+      "42"
+    ],
+    "colores": [
+      "Beige Natural",
+      "Negro",
+      "Oliva"
+    ],
+    "imagenes": [
+      "https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1000&q=80"
+    ],
+    "descripcion": "Pantalón de caída fluida en mezcla de lino y viscosa. Cintura alta elastizada en la espalda con pinzas frontales elegantes.",
+    "stock": 14,
+    "destacado": true,
+    "tag": "Colección Cápsula"
+  },
+  {
+    "id": "prod-7",
+    "nombre": "Gorra Cap 6 Paneles Washed",
+    "precio": 45.00,
+    "categoria": "Accesorios",
+    "tallas": [
+      "Única"
+    ],
+    "colores": [
+      "Negro Desgastado",
+      "Verde Militar",
+      "Azul Marino"
+    ],
+    "imagenes": [
+      "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?auto=format&fit=crop&w=1000&q=80"
+    ],
+    "descripcion": "Gorra de gabardina esmerilada con lavado vintage. Hebilla metálica regulable trasera y bordado tonal minimalista.",
+    "stock": 30,
+    "destacado": false,
+    "tag": "Accesorio"
+  },
+  {
+    "id": "prod-8",
+    "nombre": "Tote Bag Canvas 16oz Resistente",
+    "precio": 49.00,
+    "categoria": "Accesorios",
+    "tallas": [
+      "Única"
+    ],
+    "colores": [
+      "Crudo Natural",
+      "Negro Mate"
+    ],
+    "imagenes": [
+      "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1597484661643-2f5fef640dd1?auto=format&fit=crop&w=1000&q=80"
+    ],
+    "descripcion": "Bolso tote bag en lona de algodón pesado 16oz de alta resistencia. Bolsillo interior con cierre para llaves y celular.",
+    "stock": 22,
+    "destacado": false,
+    "tag": "Accesorio"
+  }
+]

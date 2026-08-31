@@ -1,0 +1,45 @@
+{
+  "hero": {
+    "tag": "Nueva Temporada 2026",
+    "title": "Esenciales de corte contemporáneo.",
+    "ctaText": "Ver Catálogo Completo",
+    "imageUrl": "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1200&q=80",
+    "badgeText": "100% Algodón Premium",
+    "badgeTitle": "Calidad Garantizada",
+    "description": "Prendas confeccionadas con algodón pesado, cortes estructurados y una estética limpia creada para durar."
+  },
+  "banner": {
+    "text": "🔥 30% DE DSCTO EN TODA LA TIENDA | ENVÍOS A TODO EL PAÍS",
+    "bgColor": "#0d9488",
+    "enabled": true,
+    "textColor": "#ffffff"
+  },
+  "storeName": "NOAL | Studio & Apparel",
+  "currencyCode": "SOL",
+  "categoryCards": [
+    {
+      "title": "Hombre",
+      "category": "Hombre",
+      "imageUrl": "https://images.unsplash.com/photo-1516257984-b1b4d707412e?auto=format&fit=crop&w=800&q=80",
+      "subtitle": "Ver prendas"
+    },
+    {
+      "title": "Mujer",
+      "category": "Mujer",
+      "imageUrl": "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=800&q=80",
+      "subtitle": "Ver prendas"
+    },
+    {
+      "title": "Accesorios",
+      "category": "Accesorios",
+      "imageUrl": "https://images.unsplash.com/photo-1523779917675-b6ed3a42a561?auto=format&fit=crop&w=800&q=80",
+      "subtitle": "Ver accesorios"
+    }
+  ],
+  "currencySymbol": "S/",
+  "whatsappNumber": "988182681",
+  "featuredSection": {
+    "title": "Prendas en Tendencia",
+    "subtitle": "Los favoritos de nuestra comunidad esta semana."
+  }
+}
