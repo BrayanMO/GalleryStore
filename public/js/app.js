@@ -71,9 +71,15 @@ function applyDynamicSettings(settings) {
 
   // 2. Hero Section Dinámico
   if (settings.hero) {
-    if (settings.hero.tag) {
-      const tagEl = document.getElementById('hero-tag-text');
-      if (tagEl) tagEl.textContent = settings.hero.tag;
+    const tagBadge = document.getElementById('hero-tag-badge');
+    const tagEl = document.getElementById('hero-tag-text');
+    if (tagBadge && tagEl) {
+      if (settings.hero.tag && settings.hero.tag.trim() !== '') {
+        tagEl.textContent = settings.hero.tag.trim();
+        tagBadge.style.display = 'inline-flex';
+      } else {
+        tagBadge.style.display = 'none';
+      }
     }
     if (settings.hero.title) {
       const titleEl = document.getElementById('hero-title-text');
