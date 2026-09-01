@@ -1,8 +1,5 @@
-/**
- * Archivo principal de inicialización de la aplicación - GALLERY STORE
- */
 import { fetchSettings, fetchConfig } from './api.js';
-import { setStoreConfig, openCartDrawer, closeCartDrawer, renderCartDrawer, updateCartBadge, switchView, closeProductModal } from './ui.js';
+import { setStoreConfig, openCartDrawer, closeCartDrawer, renderCartDrawer, updateCartBadge, switchView, closeProductModal, closeLightbox } from './ui.js';
 import { initCatalog, loadFeaturedProducts, setCatalogCategory } from './catalog.js';
 import { initCheckout, renderCheckoutSummary, setCheckoutConfig } from './checkout.js';
 
@@ -127,7 +124,7 @@ function applyDynamicSettings(settings) {
       catContainer.querySelectorAll('[data-category-card]').forEach(card => {
         card.addEventListener('click', async () => {
           const cat = card.dataset.categoryCard;
-          switchView('catalog');
+          switchView('catalog', true);
           await setCatalogCategory(cat);
         });
       });
@@ -148,20 +145,32 @@ function applyDynamicSettings(settings) {
 }
 
 function setupNavigation() {
-  // Enlaces del navbar
+  // Enlaces de navegación (Navbar Desktop, Barra Móvil, Footer)
   document.querySelectorAll('[data-nav]').forEach(el => {
     el.addEventListener('click', (e) => {
       e.preventDefault();
       const targetView = el.dataset.nav;
-      switchView(targetView);
+      switchView(targetView, true);
     });
   });
+
+  // Botón volver en la cabecera móvil
+  const mobileBackBtn = document.getElementById('mobile-header-back-btn');
+  if (mobileBackBtn) {
+    mobileBackBtn.addEventListener('click', () => {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        switchView('home', true);
+      }
+    });
+  }
 
   // Botón CTA del Hero
   const heroCtaBtn = document.getElementById('hero-cta-btn');
   if (heroCtaBtn) {
     heroCtaBtn.addEventListener('click', () => {
-      switchView('catalog');
+      switchView('catalog', true);
     });
   }
 
@@ -169,7 +178,7 @@ function setupNavigation() {
   document.querySelectorAll('[data-category-card]').forEach(card => {
     card.addEventListener('click', async () => {
       const cat = card.dataset.categoryCard;
-      switchView('catalog');
+      switchView('catalog', true);
       await setCatalogCategory(cat);
     });
   });
@@ -178,24 +187,77 @@ function setupNavigation() {
   const drawerCheckoutBtn = document.getElementById('drawer-checkout-btn');
   if (drawerCheckoutBtn) {
     drawerCheckoutBtn.addEventListener('click', () => {
-      closeCartDrawer();
-      switchView('checkout');
+      closeCartDrawer(false);
+      switchView('checkout', true);
       renderCheckoutSummary();
     });
+  }
+
+  // Manejo del botón Atrás del Navegador Móvil / Gestos de retroceso (PopState)
+  window.addEventListener('popstate', () => {
+    const lightbox = document.getElementById('lightbox-backdrop');
+    const productModal = document.getElementById('product-modal-backdrop');
+    const cartDrawer = document.getElementById('drawer-backdrop');
+
+    // 1. Si el lightbox fullscreen estaba abierto, cerrarlo
+    if (lightbox && lightbox.classList.contains('active')) {
+      closeLightbox();
+      return;
+    }
+
+    // 2. Si el modal de producto estaba abierto, cerrarlo
+    if (productModal && productModal.classList.contains('active')) {
+      closeProductModal();
+      return;
+    }
+
+    // 3. Si el carrito estaba abierto, cerrarlo
+    if (cartDrawer && cartDrawer.classList.contains('active')) {
+      closeCartDrawer(false);
+      return;
+    }
+
+    // 4. Navegar a la vista correspondiente en el historial
+    const hash = window.location.hash;
+    if (hash === '#checkout') {
+      switchView('checkout', false);
+      renderCheckoutSummary();
+    } else if (hash === '#catalog' || hash === '#catalogo') {
+      switchView('catalog', false);
+    } else {
+      switchView('home', false);
+    }
+  });
+
+  // Restaurar vista si la página cargó con un hash inicial (#catalogo o #checkout)
+  const initialHash = window.location.hash;
+  if (initialHash === '#checkout') {
+    switchView('checkout', false);
+    renderCheckoutSummary();
+  } else if (initialHash === '#catalog' || initialHash === '#catalogo') {
+    switchView('catalog', false);
+  } else {
+    switchView('home', false);
   }
 }
 
 function setupModalsAndDrawers() {
-  // Botón abrir carrito en navbar
+  // Botón abrir carrito en navbar desktop
   const cartToggleBtn = document.getElementById('cart-toggle-btn');
   if (cartToggleBtn) {
-    cartToggleBtn.addEventListener('click', openCartDrawer);
+    cartToggleBtn.addEventListener('click', () => openCartDrawer(true));
+  }
+
+  // Botón abrir carrito en barra móvil inferior
+  const mobileCartBtn = document.getElementById('mobile-nav-cart-btn');
+  if (mobileCartBtn) {
+    mobileCartBtn.addEventListener('click', () => openCartDrawer(true));
   }
 
   // Botón cerrar carrito
   const drawerCloseBtn = document.getElementById('drawer-close-btn');
   if (drawerCloseBtn) {
-    drawerCloseBtn.addEventListener('click', closeCartDrawer);
+    drawerCloseBtn.addEventListener('click', () => closeCartDrawer(true));
   }
 
   // Click en backdrop del drawer para cerrar
@@ -203,7 +265,7 @@ function setupModalsAndDrawers() {
   if (drawerBackdrop) {
     drawerBackdrop.addEventListener('click', (e) => {
       if (e.target === drawerBackdrop) {
-        closeCartDrawer();
+        closeCartDrawer(true);
       }
     });
   }
@@ -227,7 +289,7 @@ function setupModalsAndDrawers() {
         confirmModal.classList.remove('active');
         document.body.style.overflow = '';
       }
-      switchView('home');
+      switchView('home', true);
     });
   }
 }

@@ -34,10 +34,19 @@
        ========================================================================== -->
   <header class="site-header">
     <div class="container nav-container">
-      <!-- Logo / Marca -->
-      <a href="#" class="brand-logo" data-nav="home" id="brand-logo-btn">
-        <span class="store-brand-name">Gallery | Store</span><span class="accent"></span>
-      </a>
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <button type="button" class="mobile-header-back-btn" id="mobile-header-back-btn" aria-label="Volver atrás" style="display: none;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          <span>Volver</span>
+        </button>
+
+        <!-- Logo / Marca -->
+        <a href="#" class="brand-logo" data-nav="home" id="brand-logo-btn">
+          <span class="store-brand-name">Gallery | Store</span><span class="accent"></span>
+        </a>
+      </div>
 
       <!-- Enlaces de navegación -->
       <nav class="nav-links">
@@ -423,6 +432,49 @@
       </div>
     </div>
   </div>
+
+  <!-- ==========================================================================
+       BARRA DE NAVEGACIÓN INFERIOR PARA MÓVIL (NATIVE BOTTOM NAV)
+       ========================================================================== -->
+  <nav class="mobile-bottom-nav" id="mobile-bottom-nav" aria-label="Navegación móvil">
+    <button type="button" class="mobile-nav-item active" data-nav="home" data-view="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+      <span>Inicio</span>
+    </button>
+
+    <button type="button" class="mobile-nav-item" data-nav="catalog" data-view="catalog">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <rect x="3" y="3" width="7" height="7"></rect>
+        <rect x="14" y="3" width="7" height="7"></rect>
+        <rect x="14" y="14" width="7" height="7"></rect>
+        <rect x="3" y="14" width="7" height="7"></rect>
+      </svg>
+      <span>Catálogo</span>
+    </button>
+
+    <button type="button" class="mobile-nav-item" id="mobile-nav-cart-btn" aria-label="Abrir carrito">
+      <div style="position: relative; display: inline-flex;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <span class="mobile-nav-badge" id="mobile-cart-badge" style="display: none;">0</span>
+      </div>
+      <span>Carrito</span>
+    </button>
+
+    <button type="button" class="mobile-nav-item" data-nav="checkout" data-view="checkout">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+      <span>Pagar</span>
+    </button>
+  </nav>
 
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toast-container"></div>

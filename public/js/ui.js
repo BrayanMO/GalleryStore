@@ -45,21 +45,27 @@ export function showToast(message, type = 'info') {
   }, 2800);
 }
 
-// Control del Carrito Drawer
-export function openCartDrawer() {
+// Control del Carrito Drawer con Historial
+export function openCartDrawer(pushHistory = true) {
   const drawerBackdrop = document.getElementById('drawer-backdrop');
   if (drawerBackdrop) {
     drawerBackdrop.classList.add('active');
     document.body.style.overflow = 'hidden';
     renderCartDrawer();
+    if (pushHistory && window.location.hash !== '#carrito') {
+      history.pushState({ drawer: 'cart' }, '', '#carrito');
+    }
   }
 }
 
-export function closeCartDrawer() {
+export function closeCartDrawer(syncHistory = false) {
   const drawerBackdrop = document.getElementById('drawer-backdrop');
-  if (drawerBackdrop) {
+  if (drawerBackdrop && drawerBackdrop.classList.contains('active')) {
     drawerBackdrop.classList.remove('active');
     document.body.style.overflow = '';
+    if (syncHistory && window.location.hash === '#carrito') {
+      window.history.back();
+    }
   }
 }
 
@@ -139,24 +145,34 @@ export function renderCartDrawer() {
   });
 }
 
-// Actualizar badge contador del carrito en el navbar
+// Actualizar badge contador del carrito en el navbar desktop y mobile
 export function updateCartBadge() {
   const badge = document.getElementById('cart-badge');
-  if (!badge) return;
-
+  const mobileBadge = document.getElementById('mobile-cart-badge');
   const count = getCartCount();
-  badge.textContent = count;
-  badge.style.display = count > 0 ? 'flex' : 'none';
 
-  badge.classList.remove('bounce');
-  void badge.offsetWidth; // trigger reflow
-  badge.classList.add('bounce');
+  if (badge) {
+    badge.textContent = count;
+    badge.style.display = count > 0 ? 'flex' : 'none';
+    badge.classList.remove('bounce');
+    void badge.offsetWidth; // trigger reflow
+    badge.classList.add('bounce');
+  }
+
+  if (mobileBadge) {
+    mobileBadge.textContent = count;
+    mobileBadge.style.display = count > 0 ? 'flex' : 'none';
+  }
 }
 
 // Modal de Detalle de Producto con Galería y Zoom
-export function openProductModal(product) {
+export function openProductModal(product, pushHistory = true) {
   const modalBackdrop = document.getElementById('product-modal-backdrop');
   if (!modalBackdrop) return;
+
+  if (pushHistory && product && product.id) {
+    history.pushState({ modal: 'product', id: product.id }, '', `#producto-${product.id}`);
+  }
 
   const images = product.imagenes && product.imagenes.length ? product.imagenes : ['https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=1000&q=80'];
   let currentImgIndex = 0;
@@ -518,7 +534,7 @@ function attachSwipeGestures(element, onSwipeLeft, onSwipeRight, onSwipeDown = n
 let lightboxImages = [];
 let lightboxCurrentIndex = 0;
 
-export function openLightbox(imagesList, startIndex = 0) {
+export function openLightbox(imagesList, startIndex = 0, pushHistory = true) {
   const lightbox = document.getElementById('lightbox-backdrop');
   if (!lightbox || !imagesList || imagesList.length === 0) return;
 
@@ -527,6 +543,10 @@ export function openLightbox(imagesList, startIndex = 0) {
 
   renderLightboxImage();
   lightbox.classList.add('active');
+
+  if (pushHistory && window.location.hash !== '#zoom') {
+    history.pushState({ modal: 'lightbox' }, '', '#zoom');
+  }
 
   // Gestos táctiles de deslizamiento (Swipe) en pantalla completa
   const imgWrap = lightbox.querySelector('.lightbox-image-wrap');
@@ -612,26 +632,48 @@ export function closeLightbox() {
   window.removeEventListener('keydown', handleLightboxKeydown);
 }
 
-// Navegación de vistas (Home, Catálogo, Checkout)
-export function switchView(viewName) {
+// Navegación de vistas (Home, Catálogo, Checkout) con Historial Web
+export function switchView(viewName, pushHistory = true) {
+  const validViews = ['home', 'catalog', 'checkout'];
+  const activeView = validViews.includes(viewName) ? viewName : 'home';
+
   const views = document.querySelectorAll('.view-section');
   views.forEach(v => {
     v.style.display = 'none';
   });
 
-  const targetView = document.getElementById(`view-${viewName}`);
+  const targetView = document.getElementById(`view-${activeView}`);
   if (targetView) {
     targetView.style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // Actualizar estado activo en navbar
-  const navLinks = document.querySelectorAll('.nav-link');
-  navLinks.forEach(link => {
-    if (link.dataset.view === viewName) {
-      link.classList.add('active');
-    } else {
-      link.classList.remove('active');
-    }
+  // Actualizar estado activo en navbar desktop y barra móvil
+  document.querySelectorAll('.nav-link').forEach(link => {
+    const isAct = link.dataset.view === activeView || link.dataset.nav === activeView;
+    link.classList.toggle('active', isAct);
   });
+
+  document.querySelectorAll('.mobile-nav-item').forEach(item => {
+    const isAct = item.dataset.view === activeView || item.dataset.nav === activeView;
+    item.classList.toggle('active', isAct);
+  });
+
+  // Mostrar botón volver en cabecera móvil si no estamos en inicio
+  const mobileBackBtn = document.getElementById('mobile-header-back-btn');
+  if (mobileBackBtn) {
+    if (activeView === 'checkout' || activeView === 'catalog') {
+      mobileBackBtn.style.display = 'inline-flex';
+    } else {
+      mobileBackBtn.style.display = 'none';
+    }
+  }
+
+  // Registrar en historial del navegador para que la flecha Atrás funcione perfectamente
+  if (pushHistory) {
+    const hash = activeView === 'home' ? '' : `#${activeView}`;
+    if (window.location.hash !== hash) {
+      history.pushState({ view: activeView }, '', hash || window.location.pathname);
+    }
+  }
 }
