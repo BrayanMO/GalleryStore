@@ -18,13 +18,12 @@ let deletingProductId = null;
 // INICIALIZACIÓN
 // ==========================================================================
 document.addEventListener('DOMContentLoaded', () => {
+  setupEventListeners();
   if (currentAdminToken) {
     showDashboard();
   } else {
     showLogin();
   }
-
-  setupEventListeners();
 });
 
 function showLogin() {
@@ -63,7 +62,7 @@ async function authFetch(url, options = {}) {
 // ==========================================================================
 // TABS SWITCHER (MOBILE & DESKTOP)
 // ==========================================================================
-function switchTab(tabId) {
+window.switchTab = function(tabId) {
   document.querySelectorAll('.tab-pane').forEach(el => el.style.display = 'none');
   document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
 
@@ -74,7 +73,8 @@ function switchTab(tabId) {
   if (targetBtn) targetBtn.classList.add('active');
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
-}
+};
+const switchTab = window.switchTab;
 
 // ==========================================================================
 // CARGA DE DATOS & MÉTRICAS
