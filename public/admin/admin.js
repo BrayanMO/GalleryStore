@@ -549,16 +549,79 @@ window.editProduct = (productId) => {
   if (prod) openProductModal(prod);
 };
 
-// Subir archivo individual
+/**
+ * Transforma y redimensiona cualquier imagen subida a un tamaño estándar uniforme
+ * (1000x1250 px, proporción 4:5) con recorte centrado y compresión optimizada.
+ */
+function normalizeImageFile(file, targetWidth = 1000, targetHeight = 1250, quality = 0.88) {
+  return new Promise((resolve) => {
+    if (!file || !file.type.startsWith('image/')) {
+      return resolve(file);
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        const ctx = canvas.getContext('2d');
+
+        // Cálculo de recorte cover centrado
+        const targetRatio = targetWidth / targetHeight;
+        const sourceRatio = img.width / img.height;
+        let sourceX = 0;
+        let sourceY = 0;
+        let sourceW = img.width;
+        let sourceH = img.height;
+
+        if (sourceRatio > targetRatio) {
+          sourceW = img.height * targetRatio;
+          sourceX = (img.width - sourceW) / 2;
+        } else {
+          sourceH = img.width / targetRatio;
+          sourceY = (img.height - sourceH) / 2;
+        }
+
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, targetWidth, targetHeight);
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+
+        ctx.drawImage(img, sourceX, sourceY, sourceW, sourceH, 0, 0, targetWidth, targetHeight);
+
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            resolve(file);
+            return;
+          }
+          const standardizedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + "-gallery.jpg", {
+            type: 'image/jpeg',
+            lastModified: Date.now()
+          });
+          resolve(standardizedFile);
+        }, 'image/jpeg', quality);
+      };
+      img.onerror = () => resolve(file);
+      img.src = e.target.result;
+    };
+    reader.onerror = () => resolve(file);
+    reader.readAsDataURL(file);
+  });
+}
+
+// Subir archivo individual con transformación automática
 async function uploadSingleFile(file) {
   if (!file) return null;
 
-  const formData = new FormData();
-  formData.append('imagen', file);
-
-  showToast('Subiendo foto...', 'info');
+  showToast('Estandarizando tamaño de imagen...', 'info');
 
   try {
+    const processedFile = await normalizeImageFile(file, 1000, 1250, 0.88);
+    const formData = new FormData();
+    formData.append('imagen', processedFile);
+
     const res = await authFetch('/api/admin/upload', {
       method: 'POST',
       body: formData
@@ -566,14 +629,14 @@ async function uploadSingleFile(file) {
 
     const data = await res.json();
     if (data.success && data.url) {
-      showToast('Foto cargada exitosamente', 'success');
+      showToast('Foto estandarizada y cargada con éxito', 'success');
       return data.url;
     } else {
       showToast(data.error || 'Error al subir foto', 'error');
       return null;
     }
   } catch (error) {
-    console.error('Error al subir imagen:', error);
+    console.error('Error al procesar/subir imagen:', error);
     showToast('Error al conectar con el servidor', 'error');
     return null;
   }

@@ -889,7 +889,8 @@ a {
 .image-preview-item {
   position: relative;
   width: 76px;
-  height: 76px;
+  height: 95px;
+  aspect-ratio: 4/5;
   border-radius: var(--radius-md);
   overflow: hidden;
   border: 1px solid var(--border-card);
