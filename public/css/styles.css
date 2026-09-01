@@ -932,6 +932,38 @@ ul, ol {
   transform: translateY(0) scale(1);
 }
 
+.modal-drag-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.65rem 0 0.25rem;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  width: 100%;
+  position: relative;
+  z-index: 12;
+}
+
+.modal-drag-pill {
+  width: 42px;
+  height: 4.5px;
+  border-radius: var(--radius-full);
+  background: #cbd5e1;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.modal-drag-bar:active .modal-drag-pill {
+  background: #94a3b8;
+  transform: scaleX(1.15);
+}
+
+@media (min-width: 640px) {
+  .modal-drag-bar {
+    display: none;
+  }
+}
+
 .modal-close-btn {
   position: absolute;
   top: 0.85rem;

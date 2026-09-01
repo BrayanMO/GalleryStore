@@ -166,6 +166,10 @@ export function openProductModal(product) {
 
   modalBackdrop.innerHTML = `
     <div class="modal-card">
+      <div class="modal-drag-bar" id="modal-drag-bar" aria-label="Desliza para cerrar">
+        <div class="modal-drag-pill"></div>
+      </div>
+
       <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="Cerrar modal">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -266,6 +270,61 @@ export function openProductModal(product) {
   modalBackdrop.classList.add('active');
   document.body.style.overflow = 'hidden';
 
+  const modalCard = modalBackdrop.querySelector('.modal-card');
+
+  // Cerrar al hacer clic en el backdrop fuera de la tarjeta
+  modalBackdrop.onclick = (e) => {
+    if (e.target === modalBackdrop) {
+      closeProductModal();
+    }
+  };
+
+  // Gesto táctil nativo para deslizar hacia abajo y cerrar en móvil (Pull-to-Dismiss)
+  if (modalCard) {
+    let cardStartY = 0;
+    let cardCurrentY = 0;
+    let isDraggingCard = false;
+
+    modalCard.addEventListener('touchstart', (e) => {
+      if (e.touches.length === 1) {
+        cardStartY = e.touches[0].clientY;
+        cardCurrentY = cardStartY;
+        // Permitir arrastrar si se toca la barra superior o si el scroll interno está arriba del todo
+        if (e.target.closest('.modal-drag-bar') || modalCard.scrollTop <= 0) {
+          isDraggingCard = true;
+        }
+      }
+    }, { passive: true });
+
+    modalCard.addEventListener('touchmove', (e) => {
+      if (!isDraggingCard || e.touches.length !== 1) return;
+      cardCurrentY = e.touches[0].clientY;
+      const diffY = cardCurrentY - cardStartY;
+
+      // Solo permitir arrastre hacia abajo cuando el scroll está al tope
+      if (diffY > 0 && modalCard.scrollTop <= 0) {
+        modalCard.style.transition = 'none';
+        modalCard.style.transform = `translateY(${diffY}px)`;
+      }
+    }, { passive: true });
+
+    modalCard.addEventListener('touchend', () => {
+      if (!isDraggingCard) return;
+      isDraggingCard = false;
+      const diffY = cardCurrentY - cardStartY;
+
+      if (diffY > 75 && modalCard.scrollTop <= 0) {
+        closeProductModal();
+      } else {
+        modalCard.style.transition = 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
+        modalCard.style.transform = 'translateY(0)';
+        setTimeout(() => {
+          modalCard.style.transition = '';
+        }, 260);
+      }
+    }, { passive: true });
+  }
+
   // Función para cambiar de imagen en la galería
   function switchImage(index) {
     if (index < 0) index = images.length - 1;
@@ -328,7 +387,7 @@ export function openProductModal(product) {
     );
   }
 
-  // Cerrar Modal
+  // Cerrar Modal con botón X
   const closeBtn = document.getElementById('modal-close-btn');
   if (closeBtn) closeBtn.addEventListener('click', closeProductModal);
 
@@ -383,9 +442,20 @@ export function openProductModal(product) {
 
 export function closeProductModal() {
   const modalBackdrop = document.getElementById('product-modal-backdrop');
-  if (modalBackdrop) {
-    modalBackdrop.classList.remove('active');
-    document.body.style.overflow = '';
+  if (modalBackdrop && modalBackdrop.classList.contains('active')) {
+    const modalCard = modalBackdrop.querySelector('.modal-card');
+    if (modalCard) {
+      modalCard.style.transition = 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
+      modalCard.style.transform = 'translateY(100%)';
+    }
+    setTimeout(() => {
+      modalBackdrop.classList.remove('active');
+      if (modalCard) {
+        modalCard.style.transform = '';
+        modalCard.style.transition = '';
+      }
+      document.body.style.overflow = '';
+    }, 220);
   }
 }
 
