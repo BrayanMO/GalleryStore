@@ -92,8 +92,20 @@ async function loadDashboardData() {
         badge.className = 'badge-tag badge-local';
       }
 
+      const storageBadge = document.getElementById('storage-status-badge');
+      if (storageBadge) {
+        if (siteSettings.storageStatus === 'cloudinary') {
+          storageBadge.textContent = '☁️ Cloudinary';
+          storageBadge.className = 'badge-tag badge-neon';
+          storageBadge.title = 'Fotos almacenadas permanentemente en Cloudinary CDN';
+        } else {
+          storageBadge.textContent = '💾 Local';
+          storageBadge.className = 'badge-tag badge-local';
+        }
+      }
+
       document.querySelectorAll('.store-brand-name').forEach(el => {
-        el.textContent = siteSettings.storeName || 'AURA';
+        el.textContent = siteSettings.storeName || 'GALLERY';
       });
     }
 
