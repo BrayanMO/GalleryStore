@@ -273,7 +273,13 @@ export function openProductModal(product) {
     currentImgIndex = index;
 
     const mainImg = document.getElementById('modal-main-img');
-    if (mainImg) mainImg.src = images[currentImgIndex];
+    if (mainImg) {
+      mainImg.style.opacity = '0.7';
+      mainImg.src = images[currentImgIndex];
+      requestAnimationFrame(() => {
+        mainImg.style.opacity = '1';
+      });
+    }
 
     const thumbBtns = modalBackdrop.querySelectorAll('.thumb-pill-btn');
     thumbBtns.forEach((btn, i) => {
@@ -313,6 +319,13 @@ export function openProductModal(product) {
         openLightbox(images, currentImgIndex);
       }
     });
+
+    // Soporte táctil de deslizamiento (Swipe) en móvil dentro del popup de producto
+    attachSwipeGestures(
+      mediaTrigger,
+      () => switchImage(currentImgIndex + 1), // Deslizar izquierda -> siguiente
+      () => switchImage(currentImgIndex - 1)  // Deslizar derecha -> anterior
+    );
   }
 
   // Cerrar Modal
@@ -377,6 +390,59 @@ export function closeProductModal() {
 }
 
 /* ==========================================================================
+   HELPER DE GESTOS TÁCTILES (SWIPE NATIVO PARA MÓVIL)
+   ========================================================================== */
+function attachSwipeGestures(element, onSwipeLeft, onSwipeRight, onSwipeDown = null) {
+  if (!element) return;
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchEndX = 0;
+  let touchEndY = 0;
+  let isSwiping = false;
+
+  element.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchEndX = touchStartX;
+      touchEndY = touchStartY;
+      isSwiping = true;
+    }
+  }, { passive: true });
+
+  element.addEventListener('touchmove', (e) => {
+    if (!isSwiping || e.touches.length !== 1) return;
+    touchEndX = e.touches[0].clientX;
+    touchEndY = e.touches[0].clientY;
+  }, { passive: true });
+
+  element.addEventListener('touchend', (e) => {
+    if (!isSwiping) return;
+    isSwiping = false;
+
+    const diffX = touchEndX - touchStartX;
+    const diffY = touchEndY - touchStartY;
+    const absX = Math.abs(diffX);
+    const absY = Math.abs(diffY);
+
+    // Umbral de 35px para detectar deslizamiento horizontal claro
+    if (absX > 35 && absX > absY * 1.1) {
+      if (diffX < 0) {
+        // Deslizar izquierda -> Siguiente
+        if (typeof onSwipeLeft === 'function') onSwipeLeft();
+      } else {
+        // Deslizar derecha -> Anterior
+        if (typeof onSwipeRight === 'function') onSwipeRight();
+      }
+    } else if (absY > 70 && absY > absX * 1.4 && diffY > 0 && typeof onSwipeDown === 'function') {
+      // Deslizar hacia abajo -> Cerrar vista fullscreen
+      onSwipeDown();
+    }
+  }, { passive: true });
+}
+
+/* ==========================================================================
    LIGHTBOX FULL-SCREEN ZOOM VIEWER
    ========================================================================== */
 let lightboxImages = [];
@@ -391,6 +457,17 @@ export function openLightbox(imagesList, startIndex = 0) {
 
   renderLightboxImage();
   lightbox.classList.add('active');
+
+  // Gestos táctiles de deslizamiento (Swipe) en pantalla completa
+  const imgWrap = lightbox.querySelector('.lightbox-image-wrap');
+  if (imgWrap) {
+    attachSwipeGestures(
+      imgWrap,
+      () => navigateLightbox(1),  // Deslizar izquierda -> Siguiente foto
+      () => navigateLightbox(-1), // Deslizar derecha -> Foto anterior
+      closeLightbox              // Deslizar abajo -> Cerrar
+    );
+  }
 
   // Listeners de Lightbox
   const closeBtn = document.getElementById('lightbox-close-btn');
@@ -427,7 +504,11 @@ function renderLightboxImage() {
   const nextBtn = document.getElementById('lightbox-next-btn');
 
   if (imgEl && lightboxImages[lightboxCurrentIndex]) {
+    imgEl.style.opacity = '0.75';
     imgEl.src = lightboxImages[lightboxCurrentIndex];
+    requestAnimationFrame(() => {
+      imgEl.style.opacity = '1';
+    });
   }
 
   if (counterEl) {
