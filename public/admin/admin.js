@@ -593,7 +593,8 @@ function normalizeImageFile(file, targetWidth = 1000, targetHeight = 1250, quali
           sourceX = (img.width - sourceW) / 2;
         } else {
           sourceH = img.width / targetRatio;
-          sourceY = (img.height - sourceH) / 2;
+          // En fotos de moda y personas, enfocar la parte superior (cabeza, rostro y torso)
+          sourceY = Math.max(0, (img.height - sourceH) * 0.08);
         }
 
         ctx.fillStyle = '#ffffff';
