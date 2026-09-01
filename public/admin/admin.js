@@ -448,6 +448,30 @@ function populateSettingsForm(s) {
   document.getElementById('settings-whatsapp').value = s.whatsappNumber || '';
   document.getElementById('settings-currency-symbol').value = s.currencySymbol || '$';
   document.getElementById('settings-currency-code').value = s.currencyCode || 'ARS';
+
+  // 6. Métodos de Pago
+  const pm = s.paymentMethods || {};
+  const yape = pm.yape || {};
+  const plin = pm.plin || {};
+  const transfer = pm.transferencia || {};
+  const delivery = pm.contraentrega || {};
+
+  document.getElementById('payment-yape-enabled').checked = yape.enabled !== false;
+  document.getElementById('payment-yape-number').value = yape.number || s.whatsappNumber || '';
+  document.getElementById('payment-yape-holder').value = yape.holder || '';
+
+  document.getElementById('payment-plin-enabled').checked = plin.enabled !== false;
+  document.getElementById('payment-plin-number').value = plin.number || s.whatsappNumber || '';
+  document.getElementById('payment-plin-holder').value = plin.holder || '';
+
+  document.getElementById('payment-transfer-enabled').checked = transfer.enabled !== false;
+  document.getElementById('payment-transfer-bank').value = transfer.bank || 'BCP / Interbank';
+  document.getElementById('payment-transfer-holder').value = transfer.holder || '';
+  document.getElementById('payment-transfer-account').value = transfer.accountNumber || '';
+  document.getElementById('payment-transfer-cci').value = transfer.cci || '';
+
+  document.getElementById('payment-delivery-enabled').checked = delivery.enabled !== false;
+  document.getElementById('payment-delivery-instructions').value = delivery.instructions || '';
 }
 
 function renderCategoryCardsEditor(cards) {
@@ -582,7 +606,7 @@ async function handleSaveBannersAndHome() {
   }
 }
 
-// Guardar Configuración de Tienda y WhatsApp
+// Guardar Configuración de Tienda, WhatsApp y Métodos de Pago
 async function handleSaveStoreSettings() {
   const saveBtn = document.getElementById('btn-save-settings');
   saveBtn.disabled = true;
@@ -592,13 +616,36 @@ async function handleSaveStoreSettings() {
     storeName: document.getElementById('settings-store-name').value.trim(),
     whatsappNumber: document.getElementById('settings-whatsapp').value.trim(),
     currencySymbol: document.getElementById('settings-currency-symbol').value.trim(),
-    currencyCode: document.getElementById('settings-currency-code').value.trim()
+    currencyCode: document.getElementById('settings-currency-code').value.trim(),
+    paymentMethods: {
+      yape: {
+        enabled: document.getElementById('payment-yape-enabled').checked,
+        number: document.getElementById('payment-yape-number').value.trim(),
+        holder: document.getElementById('payment-yape-holder').value.trim()
+      },
+      plin: {
+        enabled: document.getElementById('payment-plin-enabled').checked,
+        number: document.getElementById('payment-plin-number').value.trim(),
+        holder: document.getElementById('payment-plin-holder').value.trim()
+      },
+      transferencia: {
+        enabled: document.getElementById('payment-transfer-enabled').checked,
+        bank: document.getElementById('payment-transfer-bank').value.trim(),
+        holder: document.getElementById('payment-transfer-holder').value.trim(),
+        accountNumber: document.getElementById('payment-transfer-account').value.trim(),
+        cci: document.getElementById('payment-transfer-cci').value.trim()
+      },
+      contraentrega: {
+        enabled: document.getElementById('payment-delivery-enabled').checked,
+        instructions: document.getElementById('payment-delivery-instructions').value.trim()
+      }
+    }
   };
 
   if (!payload.storeName || !payload.whatsappNumber) {
     showToast('El nombre de la tienda y el WhatsApp son requeridos', 'error');
     saveBtn.disabled = false;
-    saveBtn.textContent = '💾 Guardar Configuración';
+    saveBtn.textContent = '💾 Guardar Configuración y Métodos de Pago';
     return;
   }
 
@@ -610,7 +657,7 @@ async function handleSaveStoreSettings() {
     });
 
     if (res.ok) {
-      showToast('Configuración de tienda y WhatsApp actualizada', 'success');
+      showToast('Configuración y métodos de pago guardados con éxito', 'success');
       await loadDashboardData();
     } else {
       showToast('Error al guardar configuración', 'error');
@@ -619,7 +666,7 @@ async function handleSaveStoreSettings() {
     console.error(err);
   } finally {
     saveBtn.disabled = false;
-    saveBtn.textContent = '💾 Guardar Configuración';
+    saveBtn.textContent = '💾 Guardar Configuración y Métodos de Pago';
   }
 }
 

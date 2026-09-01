@@ -222,6 +222,7 @@ async function updateSettings(newSettings) {
     banner: { ...(current.banner || {}), ...(newSettings.banner || {}) },
     hero: { ...(current.hero || {}), ...(newSettings.hero || {}) },
     featuredSection: { ...(current.featuredSection || {}), ...(newSettings.featuredSection || {}) },
+    paymentMethods: newSettings.paymentMethods !== undefined ? newSettings.paymentMethods : (current.paymentMethods || {}),
     categoryCards: newSettings.categoryCards !== undefined ? newSettings.categoryCards : current.categoryCards
   };
 

@@ -39,5 +39,28 @@
   "featuredSection": {
     "title": "Prendas en Tendencia",
     "subtitle": "Los favoritos de nuestra comunidad esta semana."
+  },
+  "paymentMethods": {
+    "yape": {
+      "enabled": true,
+      "number": "988182681",
+      "holder": "Gallery Store"
+    },
+    "plin": {
+      "enabled": true,
+      "number": "988182681",
+      "holder": "Gallery Store"
+    },
+    "transferencia": {
+      "enabled": true,
+      "bank": "BCP / Interbank",
+      "accountNumber": "191-78901234-0-55",
+      "cci": "002-191-007890123455-12",
+      "holder": "Gallery Store"
+    },
+    "contraentrega": {
+      "enabled": true,
+      "instructions": "Paga en efectivo al recibir tu pedido en la puerta de tu casa"
+    }
   }
 }
