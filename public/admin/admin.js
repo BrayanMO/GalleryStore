@@ -38,6 +38,10 @@ function showDashboard() {
   loadDashboardData();
 }
 
+let categoriesList = [];
+let editingCategoryId = null;
+let deletingCategoryId = null;
+
 // Helper para peticiones autenticadas
 async function authFetch(url, options = {}) {
   const headers = options.headers || {};
@@ -115,12 +119,13 @@ async function loadDashboardData() {
 
     // 3. Cargar Categorías
     const catRes = await fetch('/api/categories');
-    availableCategories = catRes.ok ? await catRes.json() : [];
+    categoriesList = catRes.ok ? await catRes.json() : [];
 
-    // 4. Actualizar Métricas y Tabla
+    // 4. Actualizar Métricas, Dropdowns y Tablas
     updateMetrics();
-    populateCategoryFilters();
+    populateCategoryDropdowns();
     renderProductsTable();
+    renderCategoriesTable();
   } catch (error) {
     console.error('Error al cargar datos del dashboard:', error);
     showToast('Error al conectar con el servidor', 'error');
@@ -129,7 +134,7 @@ async function loadDashboardData() {
 
 function updateMetrics() {
   const totalProducts = products.length;
-  const categoriesCount = new Set(products.map(p => p.categoria)).size;
+  const categoriesCount = categoriesList.length || new Set(products.map(p => p.categoria)).size;
   const featuredCount = products.filter(p => p.destacado).length;
   const lowStockCount = products.filter(p => (p.stock || 0) <= 5).length;
 
@@ -139,20 +144,25 @@ function updateMetrics() {
   document.getElementById('metric-total-low-stock').textContent = lowStockCount;
 }
 
-function populateCategoryFilters() {
+function populateCategoryDropdowns(selectedCategory = '') {
+  const productSelect = document.getElementById('form-categoria');
   const filterSelect = document.getElementById('admin-category-filter');
-  const datalist = document.getElementById('categories-datalist');
 
-  filterSelect.innerHTML = '<option value="Todos">Todas las Categorías</option>';
-  datalist.innerHTML = '';
+  if (filterSelect) {
+    filterSelect.innerHTML = '<option value="Todos">Todas las Categorías</option>';
+    categoriesList.forEach(c => {
+      filterSelect.innerHTML += `<option value="${c.nombre}">${c.nombre}</option>`;
+    });
+  }
 
-  const uniqueCats = ['Hombre', 'Mujer', 'Accesorios', ...availableCategories.filter(c => c !== 'Todos')];
-  const distinct = [...new Set(uniqueCats)];
-
-  distinct.forEach(cat => {
-    filterSelect.innerHTML += `<option value="${cat}">${cat}</option>`;
-    datalist.innerHTML += `<option value="${cat}"></option>`;
-  });
+  if (productSelect) {
+    if (categoriesList.length === 0) {
+      productSelect.innerHTML = '<option value="">No hay categorías creadas. ¡Crea una!</option>';
+    } else {
+      productSelect.innerHTML = '<option value="">Selecciona una categoría...</option>' + 
+        categoriesList.map(c => `<option value="${c.nombre}" ${c.nombre === selectedCategory ? 'selected' : ''}>${c.nombre}</option>`).join('');
+    }
+  }
 }
 
 // ==========================================================================
@@ -224,6 +234,176 @@ function renderProductsTable() {
       </tr>
     `;
   }).join('');
+}
+
+// ==========================================================================
+// RENDERIZADO DE TABLA DE CATEGORÍAS
+// ==========================================================================
+function renderCategoriesTable() {
+  const tbody = document.getElementById('categories-table-body');
+  if (!tbody) return;
+
+  if (categoriesList.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" style="text-align: center; padding: 3.5rem 1rem; color: var(--text-muted);">
+          <div style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem;">No hay categorías registradas</div>
+          <div style="font-size: 0.85rem;">Haz clic en "+ Nueva Categoría" para crear la primera.</div>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = categoriesList.map(c => {
+    const imgHtml = c.imagen 
+      ? `<img src="${c.imagen}" alt="${c.nombre}" class="table-img" />`
+      : `<div class="table-img" style="display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--text-muted); background: var(--bg-surface-elevated);">Sin foto</div>`;
+
+    return `
+      <tr>
+        <td>${imgHtml}</td>
+        <td>
+          <div style="font-weight: 800; color: var(--text-main); font-size: 0.95rem;">${c.nombre}</div>
+          <div style="font-size: 0.75rem; color: var(--text-dim); font-family: monospace; margin-top: 2px;">${c.id}</div>
+        </td>
+        <td>
+          <div style="font-size: 0.85rem; color: var(--text-muted); max-width: 340px;">${c.descripcion || '<span style="color: var(--text-dim);">- Sin descripción -</span>'}</div>
+        </td>
+        <td style="text-align: center;">
+          <span class="badge-tag" style="background: var(--bg-surface-elevated); font-size: 0.8rem; font-weight: 700;">
+            ${c.totalProductos || 0} prendas
+          </span>
+        </td>
+        <td style="text-align: right;">
+          <div class="table-actions-cell">
+            <button type="button" class="btn-action-edit" onclick="editCategory('${c.id}')" title="Editar categoría">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+              <span>Editar</span>
+            </button>
+            <button type="button" class="btn-action-delete" onclick="confirmDeleteCategory('${c.id}')" title="Eliminar categoría">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// Modal Crear/Editar Categoría
+function openCategoryModal(catToEdit = null) {
+  const modal = document.getElementById('category-modal');
+  const title = document.getElementById('modal-category-title');
+  const form = document.getElementById('category-form');
+  const previewWrap = document.getElementById('category-image-preview-wrap');
+  const previewImg = document.getElementById('category-image-preview');
+
+  editingCategoryId = catToEdit ? catToEdit.id : null;
+
+  if (catToEdit) {
+    title.textContent = `Editar Categoría: ${catToEdit.nombre}`;
+    document.getElementById('form-category-id').value = catToEdit.id;
+    document.getElementById('form-category-nombre').value = catToEdit.nombre || '';
+    document.getElementById('form-category-descripcion').value = catToEdit.descripcion || '';
+    document.getElementById('category-image-url').value = catToEdit.imagen || '';
+    if (catToEdit.imagen) {
+      previewImg.src = catToEdit.imagen;
+      previewWrap.style.display = 'block';
+    } else {
+      previewWrap.style.display = 'none';
+    }
+  } else {
+    title.textContent = 'Crear Nueva Categoría';
+    form.reset();
+    document.getElementById('form-category-id').value = '';
+    previewWrap.style.display = 'none';
+  }
+
+  modal.classList.add('active');
+}
+
+function closeCategoryModal() {
+  document.getElementById('category-modal').classList.remove('active');
+  editingCategoryId = null;
+}
+
+window.editCategory = (catId) => {
+  const cat = categoriesList.find(c => c.id === catId);
+  if (cat) openCategoryModal(cat);
+};
+
+window.confirmDeleteCategory = (catId) => {
+  const cat = categoriesList.find(c => c.id === catId);
+  if (!cat) return;
+  deletingCategoryId = catId;
+  const label = document.getElementById('delete-category-name-label');
+  if (label) {
+    label.innerHTML = `La categoría <strong>"${cat.nombre}"</strong> será eliminada (${cat.totalProductos || 0} prendas vinculadas).`;
+  }
+  document.getElementById('delete-category-modal').classList.add('active');
+};
+
+async function executeDeleteCategory() {
+  if (!deletingCategoryId) return;
+  try {
+    const res = await authFetch(`/api/categories/${deletingCategoryId}`, { method: 'DELETE' });
+    if (res.ok) {
+      showToast('Categoría eliminada exitosamente', 'success');
+      document.getElementById('delete-category-modal').classList.remove('active');
+      deletingCategoryId = null;
+      await loadDashboardData();
+    } else {
+      const err = await res.json();
+      showToast(err.error || 'Error al eliminar categoría', 'error');
+    }
+  } catch (err) {
+    showToast('Error de conexión', 'error');
+  }
+}
+
+async function handleSaveCategory(e) {
+  e.preventDefault();
+  const id = document.getElementById('form-category-id').value;
+  const nombre = document.getElementById('form-category-nombre').value.trim();
+  const descripcion = document.getElementById('form-category-descripcion').value.trim();
+  const imagen = document.getElementById('category-image-url').value.trim();
+
+  if (!nombre) {
+    return showToast('El nombre de la categoría es obligatorio', 'error');
+  }
+
+  const payload = { nombre, descripcion, imagen };
+  const isEditing = Boolean(id);
+  const url = isEditing ? `/api/categories/${id}` : '/api/categories';
+  const method = isEditing ? 'PUT' : 'POST';
+
+  try {
+    const res = await authFetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      const saved = await res.json();
+      showToast(`Categoría "${saved.nombre}" guardada correctamente`, 'success');
+      closeCategoryModal();
+      await loadDashboardData();
+
+      // Si el modal de producto está abierto, seleccionarla automáticamente
+      const prodModal = document.getElementById('product-modal');
+      if (prodModal && prodModal.classList.contains('active')) {
+        populateCategoryDropdowns(saved.nombre);
+      }
+    } else {
+      const err = await res.json();
+      showToast(err.error || 'Error al guardar categoría', 'error');
+    }
+  } catch (err) {
+    console.error(err);
+    showToast('Error al conectar con el servidor', 'error');
+  }
 }
 
 // ==========================================================================
@@ -454,6 +634,9 @@ function openProductModal(productToEdit = null) {
   activeSizes.clear();
   activeColors.clear();
   currentProductImages = [];
+
+  const initialCategory = productToEdit ? (productToEdit.categoria || '') : '';
+  populateCategoryDropdowns(initialCategory);
 
   if (productToEdit) {
     title.textContent = `Editar: ${productToEdit.nombre}`;
@@ -818,6 +1001,14 @@ function setupEventListeners() {
     }
   });
 
+  // Pestañas del Admin
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.tab;
+      if (tab) switchTab(tab);
+    });
+  });
+
   // Logout
   document.getElementById('btn-logout').addEventListener('click', () => {
     sessionStorage.removeItem('aura_admin_token');
@@ -837,6 +1028,73 @@ function setupEventListeners() {
 
   // Form Submit Producto
   document.getElementById('product-form').addEventListener('submit', handleSaveProduct);
+
+  // Botón Rápido "+ Nueva" dentro del modal de producto
+  const quickNewCatBtn = document.getElementById('btn-quick-new-category');
+  if (quickNewCatBtn) {
+    quickNewCatBtn.addEventListener('click', () => openCategoryModal());
+  }
+
+  // Abrir y Cerrar Modal Categoría
+  const openCatModalBtn = document.getElementById('btn-open-category-modal');
+  if (openCatModalBtn) {
+    openCatModalBtn.addEventListener('click', () => openCategoryModal());
+  }
+
+  const closeCatModalBtn = document.getElementById('btn-close-category-modal');
+  if (closeCatModalBtn) closeCatModalBtn.addEventListener('click', closeCategoryModal);
+
+  const cancelCatModalBtn = document.getElementById('btn-cancel-category-modal');
+  if (cancelCatModalBtn) cancelCatModalBtn.addEventListener('click', closeCategoryModal);
+
+  // Submit Categoría Form
+  const categoryForm = document.getElementById('category-form');
+  if (categoryForm) categoryForm.addEventListener('submit', handleSaveCategory);
+
+  // Subida de foto de Categoría
+  const catDropzone = document.getElementById('category-dropzone');
+  const catFileInput = document.getElementById('category-file-input');
+  const catUrlInput = document.getElementById('category-image-url');
+  const catPreviewWrap = document.getElementById('category-image-preview-wrap');
+  const catPreviewImg = document.getElementById('category-image-preview');
+
+  if (catDropzone && catFileInput) {
+    catDropzone.addEventListener('click', () => catFileInput.click());
+    catFileInput.addEventListener('change', async (e) => {
+      if (e.target.files && e.target.files[0]) {
+        const url = await uploadSingleFile(e.target.files[0]);
+        if (url) {
+          catUrlInput.value = url;
+          catPreviewImg.src = url;
+          catPreviewWrap.style.display = 'block';
+        }
+      }
+    });
+  }
+
+  const btnApplyCatUrl = document.getElementById('btn-apply-category-url');
+  if (btnApplyCatUrl && catUrlInput) {
+    btnApplyCatUrl.addEventListener('click', () => {
+      const url = catUrlInput.value.trim();
+      if (url) {
+        catPreviewImg.src = url;
+        catPreviewWrap.style.display = 'block';
+        showToast('Vista previa de categoría actualizada');
+      }
+    });
+  }
+
+  // Eliminar Categoría Modal
+  const cancelDelCatBtn = document.getElementById('btn-cancel-delete-category');
+  if (cancelDelCatBtn) {
+    cancelDelCatBtn.addEventListener('click', () => {
+      document.getElementById('delete-category-modal').classList.remove('active');
+      deletingCategoryId = null;
+    });
+  }
+
+  const confirmDelCatBtn = document.getElementById('btn-confirm-delete-category');
+  if (confirmDelCatBtn) confirmDelCatBtn.addEventListener('click', executeDeleteCategory);
 
   // Guardar Banners & Portada
   document.getElementById('btn-save-banners').addEventListener('click', handleSaveBannersAndHome);

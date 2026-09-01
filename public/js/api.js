@@ -60,9 +60,14 @@ export async function fetchProductById(id) {
 
 export async function fetchCategories() {
   try {
-    const res = await fetch('/api/categories');
+    const res = await fetch('/api/categories?names=true');
     if (!res.ok) throw new Error('Error al obtener categorías');
-    return await res.json();
+    const data = await res.json();
+    if (Array.isArray(data) && data.length > 0) {
+      if (typeof data[0] === 'string') return data;
+      return ['Todos', ...data.map(c => c.nombre || c.name).filter(Boolean)];
+    }
+    return ['Todos', 'Hombre', 'Mujer', 'Accesorios'];
   } catch (error) {
     console.error(error);
     return ['Todos', 'Hombre', 'Mujer', 'Accesorios'];

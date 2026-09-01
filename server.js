@@ -130,13 +130,64 @@ app.put('/api/settings', requireAdminAuth, async (req, res) => {
   }
 });
 
-// API: Categorías
+// API: Categorías (Lista completa o nombres)
 app.get('/api/categories', async (req, res) => {
   try {
-    const categories = await db.getCategories();
+    if (req.query.names === 'true') {
+      const names = await db.getCategories();
+      return res.json(names);
+    }
+    const categories = await db.getAllCategories();
     res.json(categories);
   } catch (error) {
     res.status(500).json({ error: 'Error al obtener categorías' });
+  }
+});
+
+// API: Crear Categoría (Admin)
+app.post('/api/categories', requireAdminAuth, async (req, res) => {
+  try {
+    const { nombre, descripcion, imagen } = req.body;
+    if (!nombre || !nombre.trim()) {
+      return res.status(400).json({ error: 'El nombre de la categoría es obligatorio' });
+    }
+    const created = await db.createCategory({ nombre, descripcion, imagen });
+    res.status(201).json(created);
+  } catch (error) {
+    console.error('Error al crear categoría:', error);
+    res.status(400).json({ error: error.message || 'Error al crear categoría' });
+  }
+});
+
+// API: Editar Categoría (Admin)
+app.put('/api/categories/:id', requireAdminAuth, async (req, res) => {
+  try {
+    const { nombre, descripcion, imagen } = req.body;
+    if (!nombre || !nombre.trim()) {
+      return res.status(400).json({ error: 'El nombre de la categoría es obligatorio' });
+    }
+    const updated = await db.updateCategory(req.params.id, { nombre, descripcion, imagen });
+    if (!updated) {
+      return res.status(404).json({ error: 'Categoría no encontrada' });
+    }
+    res.json(updated);
+  } catch (error) {
+    console.error('Error al actualizar categoría:', error);
+    res.status(400).json({ error: error.message || 'Error al actualizar categoría' });
+  }
+});
+
+// API: Eliminar Categoría (Admin)
+app.delete('/api/categories/:id', requireAdminAuth, async (req, res) => {
+  try {
+    const deleted = await db.deleteCategory(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ error: 'Categoría no encontrada' });
+    }
+    res.json({ success: true, message: 'Categoría eliminada correctamente' });
+  } catch (error) {
+    console.error('Error al eliminar categoría:', error);
+    res.status(500).json({ error: 'Error al eliminar categoría' });
   }
 });
 

@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const JSON_PRODUCTS_PATH = path.join(__dirname, 'data', 'products.json');
 const JSON_SETTINGS_PATH = path.join(__dirname, 'data', 'settings.json');
+const JSON_CATEGORIES_PATH = path.join(__dirname, 'data', 'categories.json');
 
 let pool = null;
 let isDbConnected = false;
@@ -29,6 +30,17 @@ async function initDb() {
     const client = await pool.connect();
     console.log('✅ [DB] Conectado exitosamente a PostgreSQL (Neon Cloud)');
     isDbConnected = true;
+
+    // Crear tabla de categorías
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS categories (
+        id VARCHAR(60) PRIMARY KEY,
+        nombre VARCHAR(100) UNIQUE NOT NULL,
+        descripcion TEXT,
+        imagen TEXT,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
 
     // Crear tabla de productos
     await client.query(`
@@ -56,6 +68,23 @@ async function initDb() {
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
     `);
+
+    // Comprobar si categories está vacía y migrar desde JSON
+    const catCountRes = await client.query('SELECT COUNT(*) FROM categories');
+    const totalCategories = parseInt(catCountRes.rows[0].count, 10);
+
+    if (totalCategories === 0 && fs.existsSync(JSON_CATEGORIES_PATH)) {
+      console.log('🏷️ [DB] Inicializando categorías en PostgreSQL...');
+      const localCats = JSON.parse(fs.readFileSync(JSON_CATEGORIES_PATH, 'utf-8'));
+      for (const c of localCats) {
+        await client.query(`
+          INSERT INTO categories (id, nombre, descripcion, imagen)
+          VALUES ($1, $2, $3, $4)
+          ON CONFLICT (id) DO NOTHING
+        `, [c.id, c.nombre, c.descripcion || '', c.imagen || '']);
+      }
+      console.log(`✅ [DB] ${localCats.length} categorías migradas a PostgreSQL.`);
+    }
 
     // Comprobar si products está vacía y migrar desde JSON
     const countRes = await client.query('SELECT COUNT(*) FROM products');
@@ -288,16 +317,126 @@ async function getProductById(id) {
   return products.find(p => p.id === id) || null;
 }
 
-async function getCategories() {
+function readJsonCategories() {
+  if (!fs.existsSync(JSON_CATEGORIES_PATH)) return [];
+  return JSON.parse(fs.readFileSync(JSON_CATEGORIES_PATH, 'utf-8') || '[]');
+}
+
+function writeJsonCategories(categories) {
+  fs.writeFileSync(JSON_CATEGORIES_PATH, JSON.stringify(categories, null, 2), 'utf-8');
+}
+
+async function getAllCategories() {
   if (isDbConnected && pool) {
-    const res = await pool.query('SELECT DISTINCT categoria FROM products ORDER BY categoria ASC');
-    const categories = res.rows.map(r => r.categoria).filter(Boolean);
-    return ['Todos', ...categories];
+    const res = await pool.query(`
+      SELECT c.*, COUNT(p.id)::int AS "totalProductos"
+      FROM categories c
+      LEFT JOIN products p ON LOWER(p.categoria) = LOWER(c.nombre)
+      GROUP BY c.id, c.nombre, c.descripcion, c.imagen, c.created_at
+      ORDER BY c.nombre ASC
+    `);
+    return res.rows;
   }
 
+  const localCats = readJsonCategories();
   const products = readJsonProducts();
-  const categories = [...new Set(products.map(p => p.categoria))].filter(Boolean);
-  return ['Todos', ...categories];
+  return localCats.map(c => ({
+    ...c,
+    totalProductos: products.filter(p => (p.categoria || '').toLowerCase() === (c.nombre || '').toLowerCase()).length
+  }));
+}
+
+async function getCategories() {
+  const all = await getAllCategories();
+  const names = all.map(c => c.nombre);
+  return ['Todos', ...names];
+}
+
+async function createCategory(data) {
+  const nombre = (data.nombre || '').trim();
+  if (!nombre) throw new Error('El nombre de la categoría es obligatorio');
+  const id = data.id || `cat-${Date.now()}-${Math.round(Math.random() * 1e4)}`;
+  const descripcion = data.descripcion || '';
+  const imagen = data.imagen || '';
+
+  if (isDbConnected && pool) {
+    const res = await pool.query(`
+      INSERT INTO categories (id, nombre, descripcion, imagen)
+      VALUES ($1, $2, $3, $4)
+      RETURNING *
+    `, [id, nombre, descripcion, imagen]);
+    return res.rows[0];
+  }
+
+  const cats = readJsonCategories();
+  const exists = cats.find(c => c.nombre.toLowerCase() === nombre.toLowerCase());
+  if (exists) throw new Error('Ya existe una categoría con ese nombre');
+  const newCat = { id, nombre, descripcion, imagen };
+  cats.push(newCat);
+  writeJsonCategories(cats);
+  return newCat;
+}
+
+async function updateCategory(id, data) {
+  const nombre = (data.nombre || '').trim();
+  if (!nombre) throw new Error('El nombre de la categoría es obligatorio');
+  const descripcion = data.descripcion !== undefined ? data.descripcion : '';
+  const imagen = data.imagen !== undefined ? data.imagen : '';
+
+  if (isDbConnected && pool) {
+    const currentRes = await pool.query('SELECT * FROM categories WHERE id = $1', [id]);
+    if (currentRes.rows.length === 0) return null;
+    const oldName = currentRes.rows[0].nombre;
+
+    const res = await pool.query(`
+      UPDATE categories
+      SET nombre = $2, descripcion = $3, imagen = $4
+      WHERE id = $1
+      RETURNING *
+    `, [id, nombre, descripcion, imagen]);
+
+    if (oldName.toLowerCase() !== nombre.toLowerCase()) {
+      await pool.query('UPDATE products SET categoria = $1 WHERE LOWER(categoria) = LOWER($2)', [nombre, oldName]);
+    }
+    return res.rows[0];
+  }
+
+  const cats = readJsonCategories();
+  const index = cats.findIndex(c => c.id === id);
+  if (index === -1) return null;
+  const oldName = cats[index].nombre;
+
+  cats[index] = { ...cats[index], nombre, descripcion, imagen };
+  writeJsonCategories(cats);
+
+  if (oldName.toLowerCase() !== nombre.toLowerCase()) {
+    const products = readJsonProducts();
+    let updated = false;
+    products.forEach(p => {
+      if ((p.categoria || '').toLowerCase() === oldName.toLowerCase()) {
+        p.categoria = nombre;
+        updated = true;
+      }
+    });
+    if (updated) writeJsonProducts(products);
+  }
+
+  return cats[index];
+}
+
+async function deleteCategory(id) {
+  if (isDbConnected && pool) {
+    const res = await pool.query('DELETE FROM categories WHERE id = $1 RETURNING *', [id]);
+    return res.rowCount > 0;
+  }
+
+  const cats = readJsonCategories();
+  const filtered = cats.filter(c => c.id !== id);
+  if (filtered.length !== cats.length) {
+    writeJsonCategories(filtered);
+    return true;
+  }
+  return false;
 }
 
 async function createProduct(data) {
@@ -438,6 +577,10 @@ module.exports = {
   getAllProducts,
   getProductById,
   getCategories,
+  getAllCategories,
+  createCategory,
+  updateCategory,
+  deleteCategory,
   createProduct,
   updateProduct,
   deleteProduct,

@@ -1,0 +1,32 @@
+[
+  {
+    "id": "cat-hombre",
+    "nombre": "Hombre",
+    "descripcion": "Prendas masculinas con corte contemporáneo y estilo urbano",
+    "imagen": "https://images.unsplash.com/photo-1516826957135-700dedea698c?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "cat-mujer",
+    "nombre": "Mujer",
+    "descripcion": "Prendas esenciales y siluetas modernas para mujer",
+    "imagen": "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "cat-poleras",
+    "nombre": "Poleras & Hoodies",
+    "descripcion": "Algodón pesado, calce oversized y máxima comodidad",
+    "imagen": "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "cat-pantalones",
+    "nombre": "Pantalones",
+    "descripcion": "Pantalones cargo, joggers y sastreros modernos",
+    "imagen": "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=800&q=80"
+  },
+  {
+    "id": "cat-accesorios",
+    "nombre": "Accesorios",
+    "descripcion": "Gorros, gorras y complementos para tu outfit",
+    "imagen": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=800&q=80"
+  }
+]
