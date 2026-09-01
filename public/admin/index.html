@@ -507,9 +507,12 @@
 
         <!-- Imágenes del Producto -->
         <div class="form-group">
-          <label class="form-label">Fotos del Producto</label>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <label class="form-label" style="margin-bottom: 0;">Fotos de la Prenda (Galería)</label>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Arrastra para ordenar • #1 será la portada</span>
+          </div>
 
-          <input type="file" id="file-upload-input" accept="image/*" style="display: none;" />
+          <input type="file" id="file-upload-input" accept="image/*" multiple style="display: none;" />
 
           <div class="upload-zone" id="upload-dropzone">
             <svg style="margin: 0 auto 0.4rem; color: var(--text-muted);" width="28" height="28" viewBox="0 0 24 24"
@@ -518,9 +521,8 @@
               <polyline points="17 8 12 3 7 8"></polyline>
               <line x1="12" y1="3" x2="12" y2="15"></line>
             </svg>
-            <p style="font-size: 0.875rem; font-weight: 600; color: var(--text-main);">Haz clic para seleccionar o tomar
-              una foto</p>
-            <span style="font-size: 0.75rem; color: var(--text-muted);">Sube fotos desde tu computadora o celular</span>
+            <p style="font-size: 0.875rem; font-weight: 600; color: var(--text-main);">Selecciona una o varias fotos a la vez</p>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Puedes seleccionar múltiples imágenes desde tu galería o explorador</span>
           </div>
 
           <div style="display: flex; gap: 0.5rem; margin-top: 0.6rem;">

@@ -718,8 +718,11 @@ function renderColorChips() {
   });
 }
 
+let draggedImageIndex = null;
+
 function renderImagePreviews() {
   const container = document.getElementById('images-preview-list');
+  if (!container) return;
 
   if (currentProductImages.length === 0) {
     container.innerHTML = `<span style="font-size: 0.825rem; color: var(--text-dim); padding: 0.5rem 0;">No hay fotos cargadas aún.</span>`;
@@ -727,12 +730,71 @@ function renderImagePreviews() {
   }
 
   container.innerHTML = currentProductImages.map((url, index) => `
-    <div class="image-preview-item">
-      <img src="${url}" alt="Preview" />
-      <button type="button" class="image-remove-btn" onclick="removeImage(${index})" title="Quitar foto">&times;</button>
+    <div class="image-preview-item ${index === 0 ? 'is-cover' : ''}" 
+         draggable="true" 
+         data-index="${index}" 
+         title="Arrastra para reordenar la foto">
+      <span class="preview-order-badge ${index === 0 ? 'badge-cover' : ''}">
+        ${index === 0 ? '★ Portada' : `#${index + 1}`}
+      </span>
+      <img src="${url}" alt="Foto ${index + 1}" draggable="false" />
+      
+      <div class="image-preview-actions">
+        ${index > 0 ? `<button type="button" class="img-move-btn" onclick="event.stopPropagation(); moveImage(${index}, -1)" title="Mover a la izquierda">◀</button>` : '<span></span>'}
+        ${index < currentProductImages.length - 1 ? `<button type="button" class="img-move-btn" onclick="event.stopPropagation(); moveImage(${index}, 1)" title="Mover a la derecha">▶</button>` : '<span></span>'}
+      </div>
+      
+      <button type="button" class="image-remove-btn" onclick="event.stopPropagation(); removeImage(${index})" title="Quitar foto">&times;</button>
     </div>
   `).join('');
+
+  // Eventos de Drag & Drop para ordenar fotos
+  const items = container.querySelectorAll('.image-preview-item');
+  items.forEach(item => {
+    item.addEventListener('dragstart', (e) => {
+      draggedImageIndex = parseInt(item.dataset.index, 10);
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', draggedImageIndex);
+    });
+
+    item.addEventListener('dragend', () => {
+      item.classList.remove('dragging');
+      items.forEach(i => i.classList.remove('drag-over'));
+      draggedImageIndex = null;
+    });
+
+    item.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      item.classList.add('drag-over');
+    });
+
+    item.addEventListener('dragleave', () => {
+      item.classList.remove('drag-over');
+    });
+
+    item.addEventListener('drop', (e) => {
+      e.preventDefault();
+      item.classList.remove('drag-over');
+      const targetIndex = parseInt(item.dataset.index, 10);
+      if (draggedImageIndex !== null && draggedImageIndex !== targetIndex) {
+        const [movedUrl] = currentProductImages.splice(draggedImageIndex, 1);
+        currentProductImages.splice(targetIndex, 0, movedUrl);
+        renderImagePreviews();
+      }
+    });
+  });
 }
+
+window.moveImage = (index, delta) => {
+  const newIndex = index + delta;
+  if (newIndex >= 0 && newIndex < currentProductImages.length) {
+    const [moved] = currentProductImages.splice(index, 1);
+    currentProductImages.splice(newIndex, 0, moved);
+    renderImagePreviews();
+  }
+};
 
 window.removeImage = (index) => {
   currentProductImages.splice(index, 1);
@@ -1165,11 +1227,23 @@ function setupEventListeners() {
   dropzone.addEventListener('click', () => fileInput.click());
 
   fileInput.addEventListener('change', async (e) => {
-    if (e.target.files && e.target.files[0]) {
-      const url = await uploadSingleFile(e.target.files[0]);
-      if (url) {
-        currentProductImages.push(url);
-        renderImagePreviews();
+    if (e.target.files && e.target.files.length > 0) {
+      const files = Array.from(e.target.files);
+      showToast(`Procesando ${files.length} foto(s)...`, 'info');
+      let uploadedCount = 0;
+
+      for (const file of files) {
+        const url = await uploadSingleFile(file);
+        if (url) {
+          currentProductImages.push(url);
+          uploadedCount++;
+        }
+      }
+
+      fileInput.value = '';
+      renderImagePreviews();
+      if (uploadedCount > 0) {
+        showToast(`${uploadedCount} foto(s) agregada(s) a la galería`, 'success');
       }
     }
   });

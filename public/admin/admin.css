@@ -880,33 +880,110 @@ a {
 }
 
 .images-preview-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(105px, 1fr));
+  gap: 0.85rem;
   margin-top: 1rem;
 }
 
 .image-preview-item {
   position: relative;
-  width: 76px;
-  height: 95px;
-  aspect-ratio: 4/5;
+  height: 135px;
   border-radius: var(--radius-md);
   overflow: hidden;
-  border: 1px solid var(--border-card);
+  border: 2px solid var(--border-card);
   background: var(--bg-surface-muted);
+  cursor: grab;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.image-preview-item:active {
+  cursor: grabbing;
+}
+
+.image-preview-item.is-cover {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.image-preview-item.dragging {
+  opacity: 0.35;
+  transform: scale(0.95);
+}
+
+.image-preview-item.drag-over {
+  border-color: #0f172a;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
 }
 
 .image-preview-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: top center;
+  pointer-events: none;
+}
+
+.preview-order-badge {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+  z-index: 2;
+  letter-spacing: 0.02em;
+}
+
+.preview-order-badge.badge-cover {
+  background: var(--accent);
+  color: #ffffff;
+  box-shadow: 0 2px 4px rgba(13, 148, 136, 0.4);
+}
+
+.image-preview-actions {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  right: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2px;
+  z-index: 3;
+}
+
+.img-move-btn {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  transition: all 0.15s ease;
+}
+
+.img-move-btn:hover {
+  background: rgba(15, 23, 42, 0.95);
+  transform: scale(1.1);
 }
 
 .image-remove-btn {
   position: absolute;
-  top: 3px;
-  right: 3px;
+  top: 4px;
+  right: 4px;
   background: rgba(239, 68, 68, 0.95);
   color: #ffffff;
   width: 22px;
@@ -915,8 +992,15 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 700;
+  z-index: 3;
+  transition: all 0.15s ease;
+}
+
+.image-remove-btn:hover {
+  background: #dc2626;
+  transform: scale(1.1);
 }
 
 /* Sticky Action Bar */
