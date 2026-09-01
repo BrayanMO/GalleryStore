@@ -178,10 +178,10 @@ async function getSettings() {
 
   return {
     ...settingsData,
-    storeName: settingsData.storeName || process.env.STORE_NAME || 'NOAL | Studio & Apparel',
-    whatsappNumber: settingsData.whatsappNumber || process.env.WHATSAPP_NUMBER || '988182681',
-    currencySymbol: settingsData.currencySymbol || process.env.CURRENCY_SYMBOL || 'S/',
-    currencyCode: settingsData.currencyCode || process.env.CURRENCY_CODE || 'SOL'
+    storeName: settingsData.storeName || process.env.STORE_NAME || 'Gallery | Store',
+    whatsappNumber: settingsData.whatsappNumber || process.env.WHATSAPP_NUMBER || '',
+    currencySymbol: settingsData.currencySymbol || process.env.CURRENCY_SYMBOL || '',
+    currencyCode: settingsData.currencyCode || process.env.CURRENCY_CODE || ''
   };
 }
 

@@ -1,18 +1,21 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Panel de Administración | NOAL Studio</title>
-  
+  <title>Panel de Administración | Gallery Store</title>
+
   <!-- Google Fonts: Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
 
   <!-- Estilos del Admin Minimalista -->
   <link rel="stylesheet" href="/admin/admin.css" />
 </head>
+
 <body>
 
   <!-- ==========================================================================
@@ -21,14 +24,15 @@
   <section id="login-view" class="login-wrap">
     <div class="login-card">
       <div class="login-brand">
-        <span class="store-brand-name">NOAL</span><span class="accent">.</span> <span>Admin</span>
+        <span class="store-brand-name">Gallery</span><span class="accent">.</span> <span>Admin</span>
       </div>
       <p class="login-subtitle">Ingresa la contraseña de administrador para gestionar tu catálogo y portada</p>
 
       <form id="admin-login-form">
         <div class="form-group">
           <label class="form-label" for="login-password">Contraseña</label>
-          <input type="password" id="login-password" class="form-input" placeholder="Ingresa tu clave" required autofocus />
+          <input type="password" id="login-password" class="form-input" placeholder="Ingresa tu clave" required
+            autofocus />
         </div>
 
         <button type="submit" class="btn btn-primary btn-full" id="btn-submit-login">
@@ -49,7 +53,7 @@
     <header class="admin-navbar">
       <div class="nav-flex">
         <div class="admin-logo">
-          <span class="store-brand-name">NOAL</span><span class="accent">.</span>
+          <span class="store-brand-name">Gallery</span><span class="accent">.</span>
           <span id="db-status-badge" class="badge-tag badge-neon">Neon DB</span>
         </div>
 
@@ -93,7 +97,9 @@
         <button type="button" class="tab-btn" data-tab="settings" id="tab-btn-settings">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            <path
+              d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+            </path>
           </svg>
           <span>Configuración</span>
         </button>
@@ -102,7 +108,7 @@
 
     <!-- Contenido Principal -->
     <main class="admin-main">
-      
+
       <!-- ====================================================================
            TAB 1: PRODUCTOS
            ==================================================================== -->
@@ -135,7 +141,8 @@
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
               </svg>
-              <input type="text" id="admin-search-input" class="form-input" placeholder="Buscar por nombre, ID o descripción..." />
+              <input type="text" id="admin-search-input" class="form-input"
+                placeholder="Buscar por nombre, ID o descripción..." />
             </div>
 
             <select id="admin-category-filter" class="form-select" style="max-width: 220px;">
@@ -178,27 +185,30 @@
            TAB 2: BANNERS Y PORTADA (HOME)
            ==================================================================== -->
       <section id="tab-content-banners" class="tab-pane" style="display: none;">
-        
+
         <!-- 1. Banner de Anuncios Superior -->
         <div class="editor-card">
           <div class="editor-card-header">
             <h2 class="editor-card-title">Banner Promocional Superior</h2>
             <div style="display: flex; align-items: center; gap: 0.5rem;">
-              <input type="checkbox" id="banner-enabled" style="width: 18px; height: 18px; accent-color: var(--accent);" />
+              <input type="checkbox" id="banner-enabled"
+                style="width: 18px; height: 18px; accent-color: var(--accent);" />
               <label for="banner-enabled" style="font-size: 0.85rem; font-weight: 600; cursor: pointer;">Activar</label>
             </div>
           </div>
 
           <div class="form-group">
             <label class="form-label" for="banner-text">Texto Promocional</label>
-            <input type="text" id="banner-text" class="form-input" placeholder="Ej: 30% DE DESCUENTO EN TODA LA TIENDA" />
+            <input type="text" id="banner-text" class="form-input"
+              placeholder="Ej: 30% DE DESCUENTO EN TODA LA TIENDA" />
           </div>
 
           <div class="form-grid-2">
             <div class="form-group">
               <label class="form-label" for="banner-bg-color">Color de Fondo</label>
               <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <input type="color" id="banner-bg-color-picker" style="width: 44px; height: 44px; border: 1px solid var(--border-card); border-radius: var(--radius-sm); cursor: pointer;" />
+                <input type="color" id="banner-bg-color-picker"
+                  style="width: 44px; height: 44px; border: 1px solid var(--border-card); border-radius: var(--radius-sm); cursor: pointer;" />
                 <input type="text" id="banner-bg-color" class="form-input" placeholder="#0d9488" />
               </div>
             </div>
@@ -206,7 +216,8 @@
             <div class="form-group">
               <label class="form-label" for="banner-text-color">Color de Texto</label>
               <div style="display: flex; gap: 0.5rem; align-items: center;">
-                <input type="color" id="banner-text-color-picker" style="width: 44px; height: 44px; border: 1px solid var(--border-card); border-radius: var(--radius-sm); cursor: pointer;" />
+                <input type="color" id="banner-text-color-picker"
+                  style="width: 44px; height: 44px; border: 1px solid var(--border-card); border-radius: var(--radius-sm); cursor: pointer;" />
                 <input type="text" id="banner-text-color" class="form-input" placeholder="#ffffff" />
               </div>
             </div>
@@ -233,26 +244,30 @@
 
           <div class="form-group">
             <label class="form-label" for="hero-title">Título Principal</label>
-            <input type="text" id="hero-title" class="form-input" placeholder="Ej: Esenciales de corte contemporáneo." />
+            <input type="text" id="hero-title" class="form-input"
+              placeholder="Ej: Esenciales de corte contemporáneo." />
           </div>
 
           <div class="form-group">
             <label class="form-label" for="hero-desc">Descripción</label>
-            <textarea id="hero-desc" class="form-textarea" rows="2" placeholder="Prendas confeccionadas con materias primas seleccionadas..."></textarea>
+            <textarea id="hero-desc" class="form-textarea" rows="2"
+              placeholder="Prendas confeccionadas con materias primas seleccionadas..."></textarea>
           </div>
 
           <!-- Imagen del Hero -->
           <div class="form-group">
             <label class="form-label">Foto de Portada</label>
-            
+
             <input type="file" id="hero-file-input" accept="image/*" style="display: none;" />
             <div class="upload-zone" id="hero-dropzone">
-              <p style="font-size: 0.9rem; font-weight: 600; color: var(--text-main);">Haz clic para seleccionar o tomar una foto</p>
+              <p style="font-size: 0.9rem; font-weight: 600; color: var(--text-main);">Haz clic para seleccionar o tomar
+                una foto</p>
               <span style="font-size: 0.775rem; color: var(--text-muted);">Soporta formatos JPG, PNG, WEBP</span>
             </div>
 
             <div style="display: flex; gap: 0.5rem; margin-top: 0.6rem;">
-              <input type="url" id="hero-image-url" class="form-input" placeholder="O ingresa un enlace de imagen (https://...)" />
+              <input type="url" id="hero-image-url" class="form-input"
+                placeholder="O ingresa un enlace de imagen (https://...)" />
               <button type="button" class="btn btn-secondary btn-sm" id="btn-apply-hero-url">Aplicar</button>
             </div>
 
@@ -262,7 +277,8 @@
           </div>
 
           <!-- Badge Flotante del Hero -->
-          <div class="form-grid-2" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-card);">
+          <div class="form-grid-2"
+            style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-card);">
             <div class="form-group">
               <label class="form-label" for="hero-badge-title">Título del Sello de Calidad</label>
               <input type="text" id="hero-badge-title" class="form-input" placeholder="Ej: Calidad Garantizada" />
@@ -300,7 +316,8 @@
 
             <div class="form-group">
               <label class="form-label" for="featured-subtitle">Subtítulo de la Sección</label>
-              <input type="text" id="featured-subtitle" class="form-input" placeholder="Ej: Los favoritos de nuestra comunidad esta semana." />
+              <input type="text" id="featured-subtitle" class="form-input"
+                placeholder="Ej: Los favoritos de nuestra comunidad esta semana." />
             </div>
           </div>
         </div>
@@ -324,14 +341,16 @@
 
           <div class="form-group">
             <label class="form-label" for="settings-store-name">Nombre de la Marca / Tienda</label>
-            <input type="text" id="settings-store-name" class="form-input" placeholder="Ej: NOAL | Studio & Apparel" required />
+            <input type="text" id="settings-store-name" class="form-input" placeholder="Ej: Gallery | Store"
+              required />
           </div>
 
           <div class="form-group">
             <label class="form-label" for="settings-whatsapp">
               Número de WhatsApp para Pedidos (con código de país)
             </label>
-            <input type="text" id="settings-whatsapp" class="form-input" placeholder="Ej: 51988182681 o 988182681" required />
+            <input type="text" id="settings-whatsapp" class="form-input" placeholder="Ej: 51988182681 o 988182681"
+              required />
           </div>
 
           <div class="form-grid-2" style="margin-top: 1rem;">
@@ -373,12 +392,14 @@
         <div class="form-grid-2">
           <div class="form-group">
             <label class="form-label" for="form-nombre">Nombre de la Prenda *</label>
-            <input type="text" id="form-nombre" class="form-input" placeholder="Ej: Remera Oversize Heavyweight" required />
+            <input type="text" id="form-nombre" class="form-input" placeholder="Ej: Remera Oversize Heavyweight"
+              required />
           </div>
 
           <div class="form-group">
             <label class="form-label" for="form-categoria">Categoría *</label>
-            <input type="text" id="form-categoria" list="categories-datalist" class="form-input" placeholder="Ej: Hombre, Mujer, Accesorios" required />
+            <input type="text" id="form-categoria" list="categories-datalist" class="form-input"
+              placeholder="Ej: Hombre, Mujer, Accesorios" required />
             <datalist id="categories-datalist"></datalist>
           </div>
         </div>
@@ -386,7 +407,8 @@
         <div class="form-grid-2">
           <div class="form-group">
             <label class="form-label" for="form-precio">Precio (S/) *</label>
-            <input type="number" id="form-precio" class="form-input" min="0" step="0.01" placeholder="Ej: 79.00" required />
+            <input type="number" id="form-precio" class="form-input" min="0" step="0.01" placeholder="Ej: 79.00"
+              required />
           </div>
 
           <div class="form-group">
@@ -402,8 +424,10 @@
           </div>
 
           <div class="form-group" style="display: flex; align-items: center; gap: 0.75rem; padding-top: 1.25rem;">
-            <input type="checkbox" id="form-destacado" style="width: 20px; height: 20px; accent-color: var(--accent);" />
-            <label for="form-destacado" style="font-size: 0.9rem; font-weight: 600; cursor: pointer; color: var(--text-main);">
+            <input type="checkbox" id="form-destacado"
+              style="width: 20px; height: 20px; accent-color: var(--accent);" />
+            <label for="form-destacado"
+              style="font-size: 0.9rem; font-weight: 600; cursor: pointer; color: var(--text-main);">
               Mostrar en Prendas Destacadas en Home
             </label>
           </div>
@@ -414,7 +438,9 @@
           <label class="form-label">Tallas Disponibles</label>
           <div class="selectable-chips" id="size-chips-container"></div>
           <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
-            <input type="text" id="input-custom-size" class="form-input" style="max-width: 140px; min-height: 38px; padding: 0.4rem 0.75rem; font-size: 0.85rem;" placeholder="Otra talla..." />
+            <input type="text" id="input-custom-size" class="form-input"
+              style="max-width: 140px; min-height: 38px; padding: 0.4rem 0.75rem; font-size: 0.85rem;"
+              placeholder="Otra talla..." />
             <button type="button" id="btn-add-custom-size" class="btn btn-secondary btn-sm">Agregar</button>
           </div>
         </div>
@@ -424,7 +450,9 @@
           <label class="form-label">Colores Disponibles</label>
           <div class="selectable-chips" id="color-chips-container"></div>
           <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
-            <input type="text" id="input-custom-color" class="form-input" style="max-width: 160px; min-height: 38px; padding: 0.4rem 0.75rem; font-size: 0.85rem;" placeholder="Otro color..." />
+            <input type="text" id="input-custom-color" class="form-input"
+              style="max-width: 160px; min-height: 38px; padding: 0.4rem 0.75rem; font-size: 0.85rem;"
+              placeholder="Otro color..." />
             <button type="button" id="btn-add-custom-color" class="btn btn-secondary btn-sm">Agregar</button>
           </div>
         </div>
@@ -432,21 +460,24 @@
         <!-- Imágenes del Producto -->
         <div class="form-group">
           <label class="form-label">Fotos del Producto</label>
-          
+
           <input type="file" id="file-upload-input" accept="image/*" style="display: none;" />
-          
+
           <div class="upload-zone" id="upload-dropzone">
-            <svg style="margin: 0 auto 0.4rem; color: var(--text-muted);" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg style="margin: 0 auto 0.4rem; color: var(--text-muted);" width="28" height="28" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="17 8 12 3 7 8"></polyline>
               <line x1="12" y1="3" x2="12" y2="15"></line>
             </svg>
-            <p style="font-size: 0.875rem; font-weight: 600; color: var(--text-main);">Haz clic para seleccionar o tomar una foto</p>
+            <p style="font-size: 0.875rem; font-weight: 600; color: var(--text-main);">Haz clic para seleccionar o tomar
+              una foto</p>
             <span style="font-size: 0.75rem; color: var(--text-muted);">Sube fotos desde tu computadora o celular</span>
           </div>
 
           <div style="display: flex; gap: 0.5rem; margin-top: 0.6rem;">
-            <input type="url" id="input-image-url" class="form-input" style="font-size: 0.85rem;" placeholder="O pega un enlace de imagen (https://...)" />
+            <input type="url" id="input-image-url" class="form-input" style="font-size: 0.85rem;"
+              placeholder="O pega un enlace de imagen (https://...)" />
             <button type="button" id="btn-add-image-url" class="btn btn-secondary btn-sm">Agregar Enlace</button>
           </div>
 
@@ -456,7 +487,8 @@
         <!-- Descripción -->
         <div class="form-group">
           <label class="form-label" for="form-descripcion">Descripción</label>
-          <textarea id="form-descripcion" class="form-textarea" rows="3" placeholder="Detalles de calce, composición, tela..."></textarea>
+          <textarea id="form-descripcion" class="form-textarea" rows="3"
+            placeholder="Detalles de calce, composición, tela..."></textarea>
         </div>
 
         <div class="sticky-action-bar">
@@ -474,14 +506,16 @@
        ========================================================================== -->
   <div class="modal-backdrop" id="delete-modal">
     <div class="modal-card" style="max-width: 440px; text-align: center; border-radius: var(--radius-lg);">
-      <div style="width: 52px; height: 52px; border-radius: var(--radius-full); background: var(--danger-bg); color: var(--danger-text); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+      <div
+        style="width: 52px; height: 52px; border-radius: var(--radius-full); background: var(--danger-bg); color: var(--danger-text); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="3 6 5 6 21 6"></polyline>
           <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
         </svg>
       </div>
 
-      <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--text-main);">¿Eliminar esta prenda?</h3>
+      <h3 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--text-main);">¿Eliminar esta
+        prenda?</h3>
       <p style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 1.5rem;" id="delete-product-name-label">
         Esta prenda será eliminada del catálogo y no estará disponible para tus clientes.
       </p>
@@ -499,4 +533,5 @@
   <!-- Script JS del Admin -->
   <script src="/admin/admin.js"></script>
 </body>
+
 </html>
